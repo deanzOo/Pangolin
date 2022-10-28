@@ -1,5 +1,5 @@
 #include "App.h"
-namespace gamEngine {
+namespace GamEngine {
 	App::App()
 	{
 	}

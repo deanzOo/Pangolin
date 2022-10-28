@@ -2,7 +2,7 @@
 
 #include "Core.h"
 
-namespace gamEngine {
+namespace GamEngine {
 	class GE_API App
 	{
 	public:
