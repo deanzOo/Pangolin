@@ -5,6 +5,6 @@ public:
 	Sandbox() {}
 };
 
-GamEngine::App* GamEngine::CreateApp() {
+GamEngine::App* GamEngine::create_app() {
 	return new Sandbox();
 }

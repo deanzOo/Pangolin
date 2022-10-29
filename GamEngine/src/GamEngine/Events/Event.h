@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gepch.h"
 #include "GamEngine/Core.h"
 
 namespace GamEngine {
@@ -20,22 +21,22 @@ namespace GamEngine {
 		EventCategoryMouseButton	= BIT(4)
 	};
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; } \
-								virtual EventType GetEventType() const override { return GetStaticType(); } \
-								virtual const char* GetEventName() const override { return #type; }
+#define EVENT_CLASS_TYPE(type) static EventType get_static_type() { return EventType::type; } \
+								virtual EventType get_event_type() const override { return get_static_type(); } \
+								virtual const char* get_event_name() const override { return #type; }
 
-#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
+#define EVENT_CLASS_CATEGORY(category) virtual int get_category_flags() const override { return category; }
 
 	class GE_API Event {
 		friend class EventDispatcher;
 	public:
-		virtual EventType GetEventType() const = 0;
-		virtual const char* GetEventName() const = 0;
-		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetEventName(); }
+		virtual EventType get_event_type() const = 0;
+		virtual const char* get_event_name() const = 0;
+		virtual int get_category_flags() const = 0;
+		virtual std::string ToString() const { return get_event_name(); }
 
-		inline bool IsInCategory(EventCategory category) {
-			return GetCategoryFlags() & (int)category;
+		inline bool is_in_category(EventCategory category) {
+			return get_category_flags() & (int)category;
 		}
 	protected:
 		bool handled = false;
@@ -48,8 +49,8 @@ namespace GamEngine {
 		EventDispatcher(Event& event) : m_event(event) {}
 
 		template<typename T>
-		bool Dispatch(EventFn<T> func) {
-			if (m_event.GetEventType() == T::GetStaticType()) {
+		bool dispatch(EventFn<T> func) {
+			if (m_event.get_event_type() == T::get_static_type()) {
 				m_event.handled = func(*(T*)&m_event);
 				return true;
 			}

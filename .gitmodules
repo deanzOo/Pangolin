@@ -1,3 +1,6 @@
 [submodule "GamEngine\\lib\\spdlog"]
 	path = GamEngine\\lib\\spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "GamEngine\\lib\\GLFW"]
+	path = GamEngine\\lib\\GLFW
+	url = https://github.com/deanzOo/glfw.git

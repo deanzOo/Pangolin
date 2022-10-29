@@ -8,7 +8,7 @@
 namespace GamEngine {
 	class GE_API Log {
 	public:
-		static void Init();
+		static void init();
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return core_logger;  }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return client_logger; }

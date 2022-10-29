@@ -5,7 +5,7 @@ namespace GamEngine {
 	std::shared_ptr<spdlog::logger> Log::core_logger;
 	std::shared_ptr<spdlog::logger> Log::client_logger;
 
-	void Log::Init() {
+	void Log::init() {
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 
 		core_logger = spdlog::stdout_color_mt("GamEngine");

@@ -5,7 +5,7 @@
 namespace GamEngine {
 	class GE_API KeyEvent : public Event {
 	public:
-		inline int GetKeyCode() const { return m_keycode; }
+		inline int get_keycode() const { return m_keycode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
@@ -18,7 +18,7 @@ namespace GamEngine {
 	public:
 		KeyPressedEvent(int keycode, int repeat_count) : KeyEvent(keycode), m_repeat_count(repeat_count) {}
 
-		inline int GetRepeatCount() const { return m_repeat_count; }
+		inline int get_repeat_count() const { return m_repeat_count; }
 
 		std::string ToString() const override{
 			std::stringstream ss;

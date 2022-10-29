@@ -8,8 +8,8 @@ namespace GamEngine {
 	public:
 		MouseMovedEvent(float x, float y) : mouse_x(x), mouse_y(y) {}
 
-		inline float GetX() const { return mouse_x; }
-		inline float GetY() const { return mouse_y; }
+		inline float get_x() const { return mouse_x; }
+		inline float get_y() const { return mouse_y; }
 
 		std::string ToString() const override{
 			std::stringstream ss;
