@@ -1,3 +1,4 @@
+#include "gepch.h"
 #include "App.h"
 namespace GamEngine {
 	App::App()

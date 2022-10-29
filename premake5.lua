@@ -22,6 +22,8 @@ project "GamEngine"
     targetdir ("bin/" .. output_dir .. "/%{prj.name}")
     objdir ("int/" .. output_dir .. "/%{prj.name}")
 
+    pchheader "gepch.h"
+
     files {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"
@@ -40,6 +42,8 @@ project "GamEngine"
             "GE_PLATFORM_WINDOWS",
             "GE_BUILD_DLL"
         }
+
+        pchsource "%{prj.name}/src/gepch.cpp"
 
     filter "configurations:Debug"
         defines { "GE_DEBUG" }
