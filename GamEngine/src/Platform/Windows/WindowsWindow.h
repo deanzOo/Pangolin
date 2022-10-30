@@ -18,7 +18,7 @@ namespace GamEngine{
 		inline unsigned int get_height() const override { return m_data.height; }
 		inline bool is_vsync() const override { return m_data.vsync; };
 
-		inline void set_event_callback(const EventCallbackFn& callback) override { m_data.EventCallback = callback; }
+		inline void set_event_callback(const EventCallbackFn& callback) override { m_data.event_callback = callback; }
 	private:
 		virtual void init(const WindowProps& props);
 		virtual void shutdown();
@@ -30,7 +30,7 @@ namespace GamEngine{
 			unsigned int width, height;
 			bool vsync;
 
-			EventCallbackFn EventCallback;
+			EventCallbackFn event_callback;
 		};
 
 		WindowData m_data;
