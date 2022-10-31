@@ -16,8 +16,10 @@ output_dir = "%{cfg.architecture}/%{cfg.buildcfg}/%{cfg.system}"
 
 include_dir = {}
 include_dir["GLFW"] = "GamEngine/lib/GLFW/include"
+include_dir["Glad"] = "GamEngine/lib/Glad/include"
 
 include "GamEngine/lib/GLFW"
+include "GamEngine/lib/Glad"
 
 project "GamEngine"
     location "GamEngine"
@@ -37,11 +39,13 @@ project "GamEngine"
     includedirs {
         "%{prj.name}/src",
         "%{prj.name}/lib/spdlog/include",
-        "%{include_dir.GLFW}"
+        "%{include_dir.GLFW}",
+        "%{include_dir.Glad}"
     }
 
     links {
         "GLFW",
+        "GLAD",
         "opengl32.lib"
     }
 
@@ -51,13 +55,14 @@ project "GamEngine"
 
         defines {
             "GE_PLATFORM_WINDOWS",
-            "GE_BUILD_DLL"
+            "GE_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         pchsource "%{prj.name}/src/gepch.cpp"
 
     filter "configurations:Debug"
-        defines { "GE_DEBUG" }
+        defines { "GE_DEBUG", "GE_ENABLE_ASSERTS" }
         buildoptions "/MDd"
         symbols "On"
 

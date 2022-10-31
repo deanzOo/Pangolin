@@ -5,6 +5,9 @@
 #include "GamEngine/Events/MouseEvent.h"
 #include "GamEngine/Events/AppEvent.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 namespace GamEngine {
 
 	static bool GLFWInitialized = false;
@@ -39,6 +42,11 @@ namespace GamEngine {
 
 		m_Window = glfwCreateWindow((int)props.m_width, (int)props.m_height, m_data.title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		GE_CORE_ASSERT(status, "Failed to initialize OpenGL context!");
+		GE_CORE_INFO("Loaded OpenGL {0}.{1}", GLVersion.major, GLVersion.minor);
+		
 		glfwSetWindowUserPointer(m_Window, &m_data);
 		set_vsync(true);
 
