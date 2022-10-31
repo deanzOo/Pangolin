@@ -20,7 +20,21 @@ namespace GamEngine {
 
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(App::on_window_close));
 
-		GE_CORE_TRACE("{0}", e);
+		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); ) {
+			(*--it)->on_event(e);
+			if (e.is_handled())
+				break;
+		}
+	}
+
+	void App::push_layer(Layer* layer)
+	{
+		m_layer_stack.push_layer(layer);
+	}
+
+	void App::push_overlay(Layer* layer)
+	{
+		m_layer_stack.pop_overlay(layer);
 	}
 
 	bool App::on_window_close(WindowCloseEvent& e) {
@@ -29,7 +43,10 @@ namespace GamEngine {
 	}
 
 	void App::run() {
-		while (running)
+		while (running) {
+			for (Layer* layer : m_layer_stack)
+				layer->on_update();
 			m_Window->on_update();
+		}
 	}
 }

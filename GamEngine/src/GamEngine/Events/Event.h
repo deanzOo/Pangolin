@@ -38,6 +38,8 @@ namespace GamEngine {
 		inline bool is_in_category(EventCategory category) {
 			return get_category_flags() & (int)category;
 		}
+
+		inline bool is_handled() { return handled; }
 	protected:
 		bool handled = false;
 	};
