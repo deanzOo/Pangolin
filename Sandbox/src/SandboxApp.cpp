@@ -2,7 +2,9 @@
 
 class Sandbox : public GamEngine::App {
 public:
-	Sandbox() {}
+	Sandbox() {
+		push_overlay(new GamEngine::ImGuiLayer());
+	}
 };
 
 GamEngine::App* GamEngine::create_app() {

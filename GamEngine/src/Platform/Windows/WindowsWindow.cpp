@@ -66,26 +66,34 @@ namespace GamEngine {
 			data.event_callback(event);
 		});
 
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int modes) {
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
 			case GLFW_PRESS: {
-				KeyPressedEvent event(key, 0);
+				KeyPressedEvent event(key, scancode, mods, 0);
 				data.event_callback(event);
 				break; 
 			}
 			case GLFW_RELEASE: {
-				KeyReleasedEvent event(key);
+				KeyReleasedEvent event(key, scancode, mods);
 				data.event_callback(event);
 				break;
 			}
 			case GLFW_REPEAT: {
-				KeyPressedEvent event(key, 1);
+				KeyPressedEvent event(key, scancode, mods, 1);
 				data.event_callback(event);
 				break;
 			}
 			}
+		});
+
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(codepoint);
+			data.event_callback(event);
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -93,12 +101,12 @@ namespace GamEngine {
 
 			switch (action) {
 			case GLFW_PRESS: {
-				MouseButtonPressedEvent event(button);
+				MouseButtonPressedEvent event(button, mods);
 				data.event_callback(event);
 				break;
 			}
 			case GLFW_RELEASE: {
-				MouseButtonReleasedEvent event(button);
+				MouseButtonReleasedEvent event(button, mods);
 				data.event_callback(event);
 				break;
 			}

@@ -44,21 +44,22 @@ namespace GamEngine {
 
 	class GE_API MouseButtonEvent : public Event {
 	public:
-		inline int get_mouse_button() const { return mouse_button; }
+		inline int get_button() const { return m_button; }
+		inline int get_mods() const { return m_mods; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button) : mouse_button(button) {}
-		float mouse_button;
+		MouseButtonEvent(int button, int mods) : m_button(button), m_mods(mods) {}
+		int m_button, m_mods;
 	};
 
 	class GE_API MouseButtonPressedEvent : public MouseButtonEvent {
 	public:
-		MouseButtonPressedEvent(int button): MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(int button, int mods): MouseButtonEvent(button, mods) {}
 		
 		std::string ToString() const override{
 			std::stringstream ss;
-			ss << "MouseButtonPressedEvent: " << mouse_button;
+			ss << "MouseButtonPressedEvent: " << m_button;
 			return ss.str();
 		}
 
@@ -67,11 +68,11 @@ namespace GamEngine {
 
 	class GE_API MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
-		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(int button, int mods) : MouseButtonEvent(button, mods) {}
 
 		std::string ToString() const override{
 			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << mouse_button;
+			ss << "MouseButtonReleasedEvent: " << m_button;
 			return ss.str();
 		}
 

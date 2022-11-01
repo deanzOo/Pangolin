@@ -2,6 +2,9 @@
 
 #include "GamEngine/Core.h"
 #include "GamEngine/Events/Event.h"
+#include "GamEngine/Events/MouseEvent.h"
+#include "GamEngine/Events/KeyEvent.h"
+#include "GamEngine/Events/AppEvent.h"
 
 namespace GamEngine {
 	class GE_API Layer

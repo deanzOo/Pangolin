@@ -3,12 +3,15 @@
 
 namespace GamEngine {
 
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+	App* App::instance = nullptr;
 
 	App::App()
 	{
-		m_Window = std::unique_ptr<Window>(Window::create());
-		m_Window->set_event_callback(BIND_EVENT_FN(App::on_event));
+		GE_CORE_ASSERT(!instance, "App already exists!");
+		instance = this;
+
+		m_window = std::unique_ptr<Window>(Window::create());
+		m_window->set_event_callback(GE_BIND_EVENT_FN(App::on_event));
 	}
 
 	App::~App()
@@ -18,7 +21,7 @@ namespace GamEngine {
 	void App::on_event(Event& e) {
 		EventDispatcher dispatcher(e);
 
-		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(App::on_window_close));
+		dispatcher.dispatch<WindowCloseEvent>(GE_BIND_EVENT_FN(App::on_window_close));
 
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); ) {
 			(*--it)->on_event(e);
@@ -30,11 +33,13 @@ namespace GamEngine {
 	void App::push_layer(Layer* layer)
 	{
 		m_layer_stack.push_layer(layer);
+		layer->on_attach();
 	}
 
 	void App::push_overlay(Layer* layer)
 	{
-		m_layer_stack.pop_overlay(layer);
+		m_layer_stack.push_overlay(layer);
+		layer->on_attach(); 
 	}
 
 	bool App::on_window_close(WindowCloseEvent& e) {
@@ -46,7 +51,7 @@ namespace GamEngine {
 		while (running) {
 			for (Layer* layer : m_layer_stack)
 				layer->on_update();
-			m_Window->on_update();
+			m_window->on_update();
 		}
 	}
 }
