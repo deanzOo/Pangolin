@@ -1,5 +1,6 @@
 #include "gepch.h"
 #include "App.h"
+#include "Input.h"
 
 namespace GamEngine {
 
@@ -51,6 +52,7 @@ namespace GamEngine {
 		while (running) {
 			for (Layer* layer : m_layer_stack)
 				layer->on_update();
+
 			m_window->on_update();
 		}
 	}
