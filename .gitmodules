@@ -7,3 +7,6 @@
 [submodule "GamEngine\\lib\\ImGui"]
 	path = GamEngine\\lib\\ImGui
 	url = git@github.com:deanzOo/imgui.git
+[submodule "GamEngine\\lib\\glm"]
+	path = GamEngine\\lib\\glm
+	url = git@github.com:deanzOo/glm.git

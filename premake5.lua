@@ -18,6 +18,7 @@ include_dir = {}
 include_dir["GLFW"] = "GamEngine/lib/GLFW/include"
 include_dir["Glad"] = "GamEngine/lib/Glad/include"
 include_dir["ImGui"] = "GamEngine/lib/ImGui"
+include_dir["glm"] = "GamEngine/lib/glm"
 
 include "GamEngine/lib/GLFW"
 include "GamEngine/lib/Glad"
@@ -36,7 +37,9 @@ project "GamEngine"
 
     files {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs {
@@ -44,7 +47,8 @@ project "GamEngine"
         "%{prj.name}/lib/spdlog/include",
         "%{include_dir.GLFW}",
         "%{include_dir.Glad}",
-        "%{include_dir.ImGui}"
+        "%{include_dir.ImGui}",
+        "%{include_dir.glm}"
     }
 
     links {
