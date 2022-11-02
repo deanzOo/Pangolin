@@ -19,11 +19,13 @@ namespace GamEngine{
 		inline bool is_vsync() const override { return m_data.vsync; };
 
 		inline void set_event_callback(const EventCallbackFn& callback) override { m_data.event_callback = callback; }
+	
+		inline virtual void* get_native_window() const override { return m_window; }
 	private:
 		virtual void init(const WindowProps& props);
 		virtual void shutdown();
 
-		GLFWwindow* m_Window;
+		GLFWwindow* m_window;
 
 		struct WindowData {
 			std::string title;

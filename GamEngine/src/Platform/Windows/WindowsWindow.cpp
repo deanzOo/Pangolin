@@ -40,17 +40,17 @@ namespace GamEngine {
 			GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.m_width, (int)props.m_height, m_data.title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
+		m_window = glfwCreateWindow((int)props.m_width, (int)props.m_height, m_data.title.c_str(), nullptr, nullptr);
+		glfwMakeContextCurrent(m_window);
 		
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		GE_CORE_ASSERT(status, "Failed to initialize OpenGL context!");
 		GE_CORE_INFO("Loaded OpenGL {0}.{1}", GLVersion.major, GLVersion.minor);
 		
-		glfwSetWindowUserPointer(m_Window, &m_data);
+		glfwSetWindowUserPointer(m_window, &m_data);
 		set_vsync(true);
 
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.width = width;
 			data.height = height;
@@ -59,14 +59,14 @@ namespace GamEngine {
 			data.event_callback(event);
 		});
 
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			WindowCloseEvent event;
 			data.event_callback(event);
 		});
 
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -89,14 +89,14 @@ namespace GamEngine {
 		});
 
 
-		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint) {
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int codepoint) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			KeyTypedEvent event(codepoint);
 			data.event_callback(event);
 		});
 
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -113,14 +113,14 @@ namespace GamEngine {
 			}
 		});
 
-		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double x_offset, double y_offset) {
+		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double x_offset, double y_offset) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseScrolledEvent event((float)x_offset, (float)y_offset);
 			data.event_callback(event);
 		});
 
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x_position, double y_position) {
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x_position, double y_position) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseMovedEvent event((float)x_position, (float)y_position);
@@ -129,12 +129,12 @@ namespace GamEngine {
 	}
 
 	void WindowsWindow::shutdown() {
-		glfwDestroyWindow(m_Window);
+		glfwDestroyWindow(m_window);
 	}
 
 	void WindowsWindow::on_update() {
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		glfwSwapBuffers(m_window);
 	}
 
 	void WindowsWindow::set_vsync(bool enabled) {

@@ -30,5 +30,7 @@ namespace GamEngine {
 		virtual bool is_vsync() const = 0;
 
 		static Window* create(const WindowProps& props = WindowProps());
+		
+		virtual void* get_native_window() const = 0;
 	};
 }

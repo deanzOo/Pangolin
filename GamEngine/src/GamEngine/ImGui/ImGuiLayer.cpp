@@ -183,6 +183,41 @@ namespace GamEngine {
         return key;
     }
 
+    enum GlfwClientApi
+    {
+        GlfwClientApi_Unknown,
+        GlfwClientApi_OpenGL,
+        GlfwClientApi_Vulkan
+    };
+
+    struct ImGui_ImplGlfw_Data
+    {
+        GLFWwindow* Window;
+        GlfwClientApi           ClientApi;
+        double                  Time;
+        GLFWwindow* MouseWindow;
+        GLFWcursor* MouseCursors[ImGuiMouseCursor_COUNT];
+        ImVec2                  LastValidMousePos;
+        bool                    InstalledCallbacks;
+
+        // Chain GLFW callbacks: our callbacks will call the user's previously installed callbacks, if any.
+        GLFWwindowfocusfun      PrevUserCallbackWindowFocus;
+        GLFWcursorposfun        PrevUserCallbackCursorPos;
+        GLFWcursorenterfun      PrevUserCallbackCursorEnter;
+        GLFWmousebuttonfun      PrevUserCallbackMousebutton;
+        GLFWscrollfun           PrevUserCallbackScroll;
+        GLFWkeyfun              PrevUserCallbackKey;
+        GLFWcharfun             PrevUserCallbackChar;
+        GLFWmonitorfun          PrevUserCallbackMonitor;
+
+        ImGui_ImplGlfw_Data() { memset((void*)this, 0, sizeof(*this)); }
+    };
+
+    static ImGui_ImplGlfw_Data* ImGui_ImplGlfw_GetBackendData()
+    {
+        return ImGui::GetCurrentContext() ? (ImGui_ImplGlfw_Data*)ImGui::GetIO().BackendPlatformUserData : nullptr;
+    }
+
 	ImGuiLayer::ImGuiLayer(): Layer("ImGuiLayer")
 	{
 	}
@@ -193,6 +228,7 @@ namespace GamEngine {
 
 	void ImGuiLayer::on_attach()
 	{
+        GLFWwindow* window = (GLFWwindow*)App::get().get_window().get_native_window();
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
 
@@ -200,11 +236,15 @@ namespace GamEngine {
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
-		ImGui_ImplOpenGL3_Init("#version 410");
+        ImGui_ImplOpenGL3_Init("#version 410");
+        ImGui_ImplGlfw_InitForOpenGL(window, false);
 	}
 
 	void ImGuiLayer::on_detach()
 	{
+        ImGui_ImplGlfw_Shutdown();
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui::DestroyContext();
 	}
 
 	void ImGuiLayer::on_update()
@@ -244,8 +284,15 @@ namespace GamEngine {
 	}
     bool ImGuiLayer::on_mouse_button_pressed_event(MouseButtonPressedEvent& event)
     {
-        ImGui_ImplGlfw_UpdateKeyModifiers(event.get_mods());
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
         int button = event.get_button();
+        int mods = event.get_mods();
+
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackMousebutton != nullptr && window == bd->Window)
+            bd->PrevUserCallbackMousebutton(window, button, GLFW_PRESS, mods);
+
+        ImGui_ImplGlfw_UpdateKeyModifiers(mods);
 
         ImGuiIO& io = ImGui::GetIO();
         if (button >= 0 && button < ImGuiMouseButton_COUNT)
@@ -257,8 +304,14 @@ namespace GamEngine {
     }
     bool ImGuiLayer::on_mouse_button_released_event(MouseButtonReleasedEvent& event)
     {
-        ImGui_ImplGlfw_UpdateKeyModifiers(event.get_mods());
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
         int button = event.get_button();
+        int mods = event.get_mods();
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackMousebutton != nullptr && window == bd->Window)
+            bd->PrevUserCallbackMousebutton(window, button, GLFW_RELEASE, mods);
+
+        ImGui_ImplGlfw_UpdateKeyModifiers(mods);
 
         ImGuiIO& io = ImGui::GetIO();
         if (button >= 0 && button < ImGuiMouseButton_COUNT)
@@ -270,8 +323,13 @@ namespace GamEngine {
     }
     bool ImGuiLayer::on_mouse_moved_event(MouseMovedEvent& event)
     {
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
         float x = event.get_x();
         float y = event.get_y();
+
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackCursorPos != nullptr && window == bd->Window)
+            bd->PrevUserCallbackCursorPos(window, x, y);
 
         ImGuiIO& io = ImGui::GetIO();
         io.AddMousePosEvent(x, y);
@@ -282,8 +340,13 @@ namespace GamEngine {
     }
     bool ImGuiLayer::on_mouse_scrolled_event(MouseScrolledEvent& event)
     {
+
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
         int x_offset = event.get_x_offset();
         int y_offset = event.get_y_offset();
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackScroll != nullptr && window == bd->Window)
+            bd->PrevUserCallbackScroll(window, x_offset, y_offset);
 
         ImGuiIO& io = ImGui::GetIO();
         io.AddMouseWheelEvent(x_offset, y_offset);
@@ -297,13 +360,16 @@ namespace GamEngine {
         int keycode = event.get_keycode();
         int scancode = event.get_scancode();
         int mods = event.get_mods();
+        GLFWwindow* window = (GLFWwindow *)(App::get().get_window().get_native_window());
+
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackKey != nullptr && window == bd->Window)
+            bd->PrevUserCallbackKey(window, keycode, scancode, GLFW_PRESS, mods);
 
         // Workaround: X11 does not include current pressed/released modifier key in 'mods' flags. https://github.com/glfw/glfw/issues/1630
         if (int keycode_to_mod = ImGui_ImplGlfw_KeyToModifier(keycode))
             mods = mods | keycode_to_mod;
         ImGui_ImplGlfw_UpdateKeyModifiers(mods);
-
-        keycode = ImGui_ImplGlfw_TranslateUntranslatedKey(keycode, scancode);
 
         ImGuiIO& io = ImGui::GetIO();
         ImGuiKey imgui_key = ImGui_ImplGlfw_KeyToImGuiKey(keycode);
@@ -319,13 +385,16 @@ namespace GamEngine {
         int keycode = event.get_keycode();
         int scancode = event.get_scancode();
         int mods = event.get_mods();
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
+
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackKey != nullptr && window == bd->Window)
+            bd->PrevUserCallbackKey(window, keycode, scancode, GLFW_RELEASE, mods);
 
         // Workaround: X11 does not include current pressed/released modifier key in 'mods' flags. https://github.com/glfw/glfw/issues/1630
         if (int keycode_to_mod = ImGui_ImplGlfw_KeyToModifier(keycode))
             mods = mods | keycode_to_mod;
         ImGui_ImplGlfw_UpdateKeyModifiers(mods);
-
-        keycode = ImGui_ImplGlfw_TranslateUntranslatedKey(keycode, scancode);
 
         ImGuiIO& io = ImGui::GetIO();
         ImGuiKey imgui_key = ImGui_ImplGlfw_KeyToImGuiKey(keycode);
@@ -338,7 +407,13 @@ namespace GamEngine {
     }
     bool ImGuiLayer::on_key_typed_event(KeyTypedEvent& event)
     {
+        GLFWwindow* window = (GLFWwindow*)(App::get().get_window().get_native_window());
         unsigned int codepoint = event.get_codepoint();
+
+        ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+        if (bd->PrevUserCallbackChar != nullptr && window == bd->Window)
+            bd->PrevUserCallbackChar(window, codepoint);
+
         ImGuiIO& io = ImGui::GetIO();
         io.AddInputCharacter(codepoint);
         GE_CORE_INFO("ImGuiLayer: KeyTypedEvent ({0})", codepoint);
