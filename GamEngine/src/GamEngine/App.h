@@ -9,7 +9,7 @@
 #include "GamEngine/ImGui/ImGuiLayer.h"
 
 namespace GamEngine {
-	class GE_API App
+	class App
 	{
 	public:
 		App();

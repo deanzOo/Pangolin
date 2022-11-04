@@ -1,10 +1,10 @@
 project "Glad"
 	kind "StaticLib"
 	language "C"
-	staticruntime "On"
+	staticruntime "on"
 
-	targetdir ("bin/" .. output_dir .. "/%{prj.name}")
-	objdir ("int/" .. output_dir .. "/%{prj.name}")
+	targetdir ("%{wks.location}/bin/" .. output_dir .. "/%{prj.name}")
+	objdir ("%{wks.location}/int/" .. output_dir .. "/%{prj.name}")
 
 	files
 	{
@@ -13,13 +13,10 @@ project "Glad"
 		"src/glad.c"
 	}
 
-	includedirs{
+	includedirs {
 		"include"
 	}
 	
-	filter "system:windows"
-		systemversion "latest"
-
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"

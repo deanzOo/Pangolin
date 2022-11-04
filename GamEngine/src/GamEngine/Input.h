@@ -4,7 +4,7 @@
 
 namespace GamEngine {
 
-	class GE_API Input {
+	class Input {
 	public:
 		inline static bool is_key_pressed(int keycode) { return instance->is_key_pressed_impl(keycode); };
 		inline static bool is_mouse_button_pressed(int button) { return instance->is_mouse_button_pressed_impl(button); };

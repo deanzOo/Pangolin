@@ -6,7 +6,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace GamEngine {
-	class GE_API Log {
+	class Log {
 	public:
 		static void init();
 

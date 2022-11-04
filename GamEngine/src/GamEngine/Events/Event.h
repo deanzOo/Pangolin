@@ -27,7 +27,7 @@ namespace GamEngine {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int get_category_flags() const override { return category; }
 
-	class GE_API Event {
+	class Event {
 		friend class EventDispatcher;
 	public:
 		virtual EventType get_event_type() const = 0;
@@ -56,6 +56,7 @@ namespace GamEngine {
 				m_event.handled = func(*(T*)&m_event);
 				return true;
 			}
+			return false;
 		}
 
 	private:

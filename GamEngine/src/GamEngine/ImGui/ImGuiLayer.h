@@ -3,7 +3,7 @@
 #include "GamEngine/Layer.h"
 
 namespace GamEngine{
-	class GE_API ImGuiLayer : public Layer {
+	class ImGuiLayer : public Layer {
 	public:
 		ImGuiLayer();
 		~ImGuiLayer() = default;

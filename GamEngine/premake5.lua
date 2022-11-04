@@ -1,9 +1,9 @@
 -- premake5.lua
 project "GamEngine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
 
     targetdir ("%{wks.location}/bin/" .. output_dir .. "/%{prj.name}")
     objdir ("%{wks.location}/int/" .. output_dir .. "/%{prj.name}")
@@ -16,6 +16,10 @@ project "GamEngine"
         "src/**.cpp",
         "lib/glm/glm/**.hpp",
         "lib/glm/glm/**.inl"
+    }
+
+    defines {
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
     includedirs {
@@ -35,15 +39,14 @@ project "GamEngine"
     }
 
     filter "system:Windows"
-        defines { "GE_PLATFORM_WINDOWS", "GE_BUILD_DLL" }
-
+        defines "GE_PLATFORM_WINDOWS"
 
     filter "configurations:Debug"
         defines { "GE_DEBUG", "GE_ENABLE_ASSERTS" }
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
-        defines { "GE_RELEASE" }
+        defines "GE_RELEASE"
         runtime "Release"
-        optimize "On"
+        optimize "on"

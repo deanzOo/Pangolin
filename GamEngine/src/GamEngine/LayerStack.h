@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace GamEngine {
-	class GE_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

@@ -11,10 +11,10 @@ public:
 
 	void on_event(GamEngine::Event& event) override {
 		if (event.get_event_type() == GamEngine::EventType::KeyPressed) {
-			GamEngine::KeyPressedEvent& event = (GamEngine::KeyPressedEvent&)event;
-			if (event.get_keycode() == GE_KEY_TAB)
+			GamEngine::KeyPressedEvent& e= (GamEngine::KeyPressedEvent&)event;
+			if (e.get_keycode() == GE_KEY_TAB)
 				GE_CLIENT_TRACE("Tab is pressed (event)!");
-			GE_CLIENT_TRACE("{0}", (char)event.get_keycode());
+			GE_CLIENT_TRACE("{0}", (char)e.get_keycode());
 		}
 	}
 };

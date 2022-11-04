@@ -7,7 +7,7 @@
 #include "GamEngine/Events/AppEvent.h"
 
 namespace GamEngine {
-	class GE_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name = "Layer");

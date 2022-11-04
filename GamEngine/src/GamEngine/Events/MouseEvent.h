@@ -4,7 +4,7 @@
 
 namespace GamEngine {
 
-	class GE_API MouseMovedEvent : public Event {
+	class MouseMovedEvent : public Event {
 	public:
 		MouseMovedEvent(float x, float y) : mouse_x(x), mouse_y(y) {}
 
@@ -23,7 +23,7 @@ namespace GamEngine {
 		float mouse_x, mouse_y;
 	};
 
-	class GE_API MouseScrolledEvent : public Event {
+	class MouseScrolledEvent : public Event {
 	public:
 		MouseScrolledEvent(float x_offset, float y_offset) : mouse_x_offset(x_offset), mouse_y_offset(y_offset) {}
 
@@ -42,7 +42,7 @@ namespace GamEngine {
 		float mouse_x_offset, mouse_y_offset;
 	};
 
-	class GE_API MouseButtonEvent : public Event {
+	class MouseButtonEvent : public Event {
 	public:
 		inline int get_button() const { return m_button; }
 		inline int get_mods() const { return m_mods; }
@@ -53,7 +53,7 @@ namespace GamEngine {
 		int m_button, m_mods;
 	};
 
-	class GE_API MouseButtonPressedEvent : public MouseButtonEvent {
+	class MouseButtonPressedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonPressedEvent(int button, int mods): MouseButtonEvent(button, mods) {}
 		
@@ -66,7 +66,7 @@ namespace GamEngine {
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class GE_API MouseButtonReleasedEvent : public MouseButtonEvent {
+	class MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonReleasedEvent(int button, int mods) : MouseButtonEvent(button, mods) {}
 

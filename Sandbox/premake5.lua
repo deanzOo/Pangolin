@@ -3,7 +3,7 @@ project "Sandbox"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
 
     targetdir ("%{wks.location}/bin/" .. output_dir .. "/%{prj.name}")
     objdir ("%{wks.location}/int/" .. output_dir .. "/%{prj.name}")
@@ -22,19 +22,14 @@ project "Sandbox"
     links { "GamEngine" }
     
     filter "system:Windows"
-
-        defines {
-            "GE_PLATFORM_WINDOWS"
-        }
-
-        postbuildcommands { ("{COPY} %{wks.location}/bin/" .. output_dir .. "/GamEngine %{wks.location}/bin/" .. output_dir .. "/%{prj.name}") }
+        defines "GE_PLATFORM_WINDOWS"
 
     filter "configurations:Debug"
-        defines { "GE_DEBUG" }
+        defines "GE_DEBUG"
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "GE_RELEASE" }
+        defines "GE_RELEASE"
         runtime "Release"
         optimize "On"

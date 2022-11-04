@@ -3,7 +3,7 @@
 #include "Event.h"
 
 namespace GamEngine {
-	class GE_API KeyEvent : public Event {
+	class KeyEvent : public Event {
 	public:
 		inline unsigned int get_codepoint() const { return m_codepoint; }
 		inline int get_keycode() const { return m_keycode; }
@@ -19,7 +19,7 @@ namespace GamEngine {
 		unsigned int m_codepoint;
 	};
 
-	class GE_API KeyPressedEvent : public KeyEvent {
+	class KeyPressedEvent : public KeyEvent {
 	public:
 		KeyPressedEvent(int keycode, int scancode, int mods, int repeat_count) : KeyEvent(keycode, scancode, mods), m_repeat_count(repeat_count) {}
 
@@ -36,7 +36,7 @@ namespace GamEngine {
 		int m_repeat_count;
 	};
 
-	class GE_API KeyReleasedEvent : public KeyEvent {
+	class KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keycode, int scancode, int mods) : KeyEvent(keycode, scancode, mods) {}
 
@@ -49,7 +49,7 @@ namespace GamEngine {
 			EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class GE_API KeyTypedEvent : public KeyEvent {
+	class KeyTypedEvent : public KeyEvent {
 	public:
 		KeyTypedEvent(unsigned int codepoint) : KeyEvent(codepoint) {}
 
