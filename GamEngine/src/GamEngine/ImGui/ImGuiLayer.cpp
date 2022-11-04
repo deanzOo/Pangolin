@@ -1,14 +1,16 @@
 #include "gepch.h"
 #include "ImGuiLayer.h"
 
-#include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.cpp"
 #include "backends/imgui_impl_opengl3.cpp"
+
+#include <stdio.h>
 
 #include "GamEngine/App.h"
 #include "GamEngine/Events/KeyEvent.h"
