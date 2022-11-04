@@ -1,6 +1,7 @@
 #include "gepch.h"
 #include "App.h"
 #include "Input.h"
+#include <glad/glad.h>
 
 namespace GamEngine {
 
@@ -13,6 +14,9 @@ namespace GamEngine {
 
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->set_event_callback(GE_BIND_EVENT_FN(App::on_event));
+
+		m_imgui_layer = new ImGuiLayer();
+		push_overlay(m_imgui_layer);
 	}
 
 	App::~App()
@@ -50,8 +54,14 @@ namespace GamEngine {
 
 	void App::run() {
 		while (running) {
+			glClear(GL_COLOR_BUFFER_BIT);
 			for (Layer* layer : m_layer_stack)
 				layer->on_update();
+
+			m_imgui_layer->begin();
+			for (Layer* layer : m_layer_stack)
+				layer->on_imgui_render();
+			m_imgui_layer->end();
 
 			m_window->on_update();
 		}
