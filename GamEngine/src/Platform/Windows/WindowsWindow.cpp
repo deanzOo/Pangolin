@@ -5,7 +5,7 @@
 #include "GamEngine/Events/MouseEvent.h"
 #include "GamEngine/Events/AppEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 #include <GLFW/glfw3.h>
 
 namespace GamEngine {
@@ -30,7 +30,7 @@ namespace GamEngine {
 		m_data.height = props.m_height;
 
 		GE_CORE_INFO("Creating window {0} ({1}, {2})", props.m_title, props.m_width, props.m_height);
-
+		
 		if (!GLFWInitialized) {
 			int success = glfwInit();
 			GE_CORE_ASSERT(success, "Could not initialize GLFW!");
@@ -41,11 +41,9 @@ namespace GamEngine {
 		}
 
 		m_window = glfwCreateWindow((int)props.m_width, (int)props.m_height, m_data.title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_window);
 		
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		GE_CORE_ASSERT(status, "Failed to initialize OpenGL context!");
-		GE_CORE_INFO("Loaded OpenGL {0}.{1}", GLVersion.major, GLVersion.minor);
+		m_context = new OpenGLContext(m_window);
+		m_context->init();
 		
 		glfwSetWindowUserPointer(m_window, &m_data);
 		set_vsync(true);
@@ -134,7 +132,7 @@ namespace GamEngine {
 
 	void WindowsWindow::on_update() {
 		glfwPollEvents();
-		glfwSwapBuffers(m_window);
+		m_context->swap_buffers();
 	}
 
 	void WindowsWindow::set_vsync(bool enabled) {

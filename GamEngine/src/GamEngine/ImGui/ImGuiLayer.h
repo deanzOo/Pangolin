@@ -2,7 +2,7 @@
 
 #include "GamEngine/Layer.h"
 
-namespace GamEngine{
+namespace GamEngine {
 	class ImGuiLayer : public Layer {
 	public:
 		ImGuiLayer();

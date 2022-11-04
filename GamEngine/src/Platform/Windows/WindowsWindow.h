@@ -1,10 +1,11 @@
 #pragma once
 
 #include "GamEngine/Window.h"
+#include "GamEngine/Renderer/Context.h"
 
 struct GLFWwindow;
 
-namespace GamEngine{
+namespace GamEngine {
 
 	class WindowsWindow : public Window {
 	public:
@@ -26,6 +27,7 @@ namespace GamEngine{
 		virtual void shutdown();
 
 		GLFWwindow* m_window;
+		Context* m_context;
 
 		struct WindowData {
 			std::string title;
