@@ -23,6 +23,8 @@ namespace GamEngine {
 
 		inline static App& get() { return *instance; }
 		inline Window& get_window() { return *m_window; }
+
+		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
 	private:
 		bool on_window_close(WindowCloseEvent& e);
 
