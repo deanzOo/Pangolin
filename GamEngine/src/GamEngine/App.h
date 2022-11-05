@@ -9,6 +9,8 @@
 #include "GamEngine/ImGui/ImGuiLayer.h"
 
 #include "GamEngine/Renderer/Shader.h"
+#include <GamEngine/Renderer/Buffers/VertexBuffer.h>
+#include <GamEngine/Renderer/Buffers/IndexBuffer.h>
 
 namespace GamEngine {
 	class App
@@ -26,8 +28,10 @@ namespace GamEngine {
 		inline static App& get() { return *instance; }
 		inline Window& get_window() { return *m_window; }
 
-		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
+		unsigned int m_vertex_array;
 		std::unique_ptr<Shader> m_shader;
+		std::unique_ptr<VertexBuffer> m_vertex_buffer;
+		std::unique_ptr<IndexBuffer> m_index_buffer;
 	private:
 		bool on_window_close(WindowCloseEvent& e);
 
