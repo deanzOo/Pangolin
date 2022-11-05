@@ -2,7 +2,7 @@
 #include "VertexBuffer.h"
 
 #include "GamEngine/Renderer/Renderer.h"
-#include "Platform/OpenGL/OpenGLVertexBuffer.h"
+#include "Platform/OpenGL/Buffers/OpenGLVertexBuffer.h"
 
 namespace GamEngine {
 	VertexBuffer* VertexBuffer::create(float* vertices, uint32_t size)

@@ -1,19 +1,19 @@
 #include "gepch.h"
-#include "IndexBuffer.h"
+#include "Shader.h"
 
 #include "GamEngine/Renderer/Renderer.h"
-#include "Platform/OpenGL/Buffers/OpenGLIndexBuffer.h"
+#include "Platform/OpenGL/Shaders/OpenGLShader.h"
 
 namespace GamEngine {
-	IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t size)
-	{
+    Shader* Shader::create(const std::string& vertex_src, const std::string& fragment_src)
+    {
 		switch (Renderer::get_api()) {
 		case RendererAPI::None:
 			GE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, size);
+		case RendererAPI::OpenGL: return new OpenGLShader(vertex_src, fragment_src);
 		}
 
 		return nullptr;
-	}
+    }
 }

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
+#include "GamEngine/Events/Event.h"
 #include "GamEngine/Events/AppEvent.h"
 #include "Window.h"
 #include "LayerStack.h"
 
 #include "GamEngine/ImGui/ImGuiLayer.h"
 
-#include "GamEngine/Renderer/Shader.h"
+#include "GamEngine/Renderer/Shaders/Shader.h"
 #include <GamEngine/Renderer/Buffers/VertexBuffer.h>
 #include <GamEngine/Renderer/Buffers/IndexBuffer.h>
 

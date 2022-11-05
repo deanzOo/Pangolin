@@ -60,7 +60,7 @@ namespace GamEngine {
 			}
 		)";
 
-		m_shader.reset(new Shader(vertex_src, fragment_src));
+		m_shader.reset(Shader::create(vertex_src, fragment_src));
 	}
 
 	App::~App()

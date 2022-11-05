@@ -1,11 +1,10 @@
 #include "gepch.h"
-#include "Shader.h"
+#include "OpenGLShader.h"
 
 #include "glad/glad.h"
 
 namespace GamEngine {
-	Shader::Shader(const std::string& vertex_src, const std::string& fragment_src)
-	{
+	OpenGLShader::OpenGLShader(const std::string& vertex_src, const std::string& fragment_src) {
 		// Create an empty vertex shader handle
 		GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -112,16 +111,20 @@ namespace GamEngine {
 		glDetachShader(m_renderer_id, vertex_shader);
 		glDetachShader(m_renderer_id, fragment_shader);
 	}
-	Shader::~Shader()
+
+	OpenGLShader::~OpenGLShader()
 	{
 		glDeleteProgram(m_renderer_id);
 	}
-	void Shader::bind() const
+
+	void OpenGLShader::bind() const
 	{
 		glUseProgram(m_renderer_id);
 	}
-	void Shader::unbind() const
+
+	void OpenGLShader::unbind() const
 	{
 		glUseProgram(0);
 	}
+
 }

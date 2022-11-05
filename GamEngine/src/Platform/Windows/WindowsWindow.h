@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GamEngine/Window.h"
+#include "GamEngine/Core/Window.h"
 #include "GamEngine/Renderer/Context.h"
 
 struct GLFWwindow;

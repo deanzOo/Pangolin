@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GamEngine/Layer.h"
+#include "GamEngine/Core/Layer.h"
 
 namespace GamEngine {
 	class ImGuiLayer : public Layer {

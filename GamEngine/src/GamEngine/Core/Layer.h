@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GamEngine/Core.h"
+#include "GamEngine/Core/Core.h"
 #include "GamEngine/Events/Event.h"
 #include "GamEngine/Events/MouseEvent.h"
 #include "GamEngine/Events/KeyEvent.h"

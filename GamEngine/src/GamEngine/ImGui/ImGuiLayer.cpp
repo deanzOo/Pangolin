@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include "GamEngine/App.h"
+#include "GamEngine/Core/App.h"
 #include "GamEngine/Events/KeyEvent.h"
 
 namespace GamEngine {
