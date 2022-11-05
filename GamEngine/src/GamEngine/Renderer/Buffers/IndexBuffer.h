@@ -5,8 +5,6 @@
 namespace GamEngine {
 	class IndexBuffer : public Buffer {
 	public:
-		virtual ~IndexBuffer() {}
-
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 

@@ -2,10 +2,30 @@
 #include "App.h"
 #include "Input.h"
 #include <glad/glad.h>
+#include <GamEngine/Renderer/Buffers/BufferLayout.h>
 
 namespace GamEngine {
 
 	App* App::instance = nullptr;
+
+	static GLenum ShaderDataTypeToGLBaseType(ShaderDataType type) {
+		switch (type) {
+			case ShaderDataType::Float: return GL_FLOAT;
+			case ShaderDataType::Float2: return GL_FLOAT;
+			case ShaderDataType::Float3: return GL_FLOAT;
+			case ShaderDataType::Float4: return GL_FLOAT;
+			case ShaderDataType::Mat3: return GL_FLOAT;
+			case ShaderDataType::Mat4: return GL_FLOAT;
+			case ShaderDataType::Int: return GL_INT;
+			case ShaderDataType::Int2: return GL_INT;
+			case ShaderDataType::Int3: return GL_INT;
+			case ShaderDataType::Int4: return GL_INT;
+			case ShaderDataType::Bool: return GL_BOOL;
+		}
+
+		GE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		return 0;
+	}
 
 	App::App()
 	{
@@ -29,8 +49,25 @@ namespace GamEngine {
 
 		m_vertex_buffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
 		
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		{
+			BufferLayout layout = {
+				{ ShaderDataType::Float3, "i_position"}
+			};
+			m_vertex_buffer->set_layout(layout);
+		}
+		uint32_t index = 0;
+		const auto& layout = m_vertex_buffer->get_layout();
+		for (const auto& element : layout) {
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(
+				index++,
+				element.get_component_count(),
+				ShaderDataTypeToGLBaseType(element.type),
+				element.normalized ? GL_TRUE : GL_FALSE,
+				layout.get_stride(),
+				(const void*)element.offset
+			);
+		}
 
 		uint32_t indices[3] = { 0, 1, 2 };
 		m_index_buffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
