@@ -40,6 +40,33 @@ namespace GamEngine {
 
 		unsigned int indices[3] = { 0, 1, 2 };
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		std::string vertex_src = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 i_position;
+
+			out vec3 o_position;
+
+			void main() {
+				o_position = i_position * 0.5 + 0.5;
+				gl_Position = vec4(i_position, 1.0);
+			}
+		)";
+
+		std::string fragment_src = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 o_color;
+
+			in vec3 o_position;
+
+			void main() {
+				o_color = vec4(o_position, 1.0);
+			}
+		)";
+
+		m_shader.reset(new Shader(vertex_src, fragment_src));
 	}
 
 	App::~App()
@@ -78,6 +105,8 @@ namespace GamEngine {
 	void App::run() {
 		while (running) {
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			m_shader->bind();
 			glBindVertexArray(m_vertex_array);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 

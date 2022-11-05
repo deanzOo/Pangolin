@@ -8,6 +8,8 @@
 
 #include "GamEngine/ImGui/ImGuiLayer.h"
 
+#include "GamEngine/Renderer/Shader.h"
+
 namespace GamEngine {
 	class App
 	{
@@ -25,6 +27,7 @@ namespace GamEngine {
 		inline Window& get_window() { return *m_window; }
 
 		unsigned int m_vertex_array, m_vertex_buffer, m_index_buffer;
+		std::unique_ptr<Shader> m_shader;
 	private:
 		bool on_window_close(WindowCloseEvent& e);
 
