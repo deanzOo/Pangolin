@@ -8,25 +8,6 @@ namespace GamEngine {
 
 	App* App::instance = nullptr;
 
-	static GLenum ShaderDataTypeToGLBaseType(ShaderDataType type) {
-		switch (type) {
-			case ShaderDataType::Float: return GL_FLOAT;
-			case ShaderDataType::Float2: return GL_FLOAT;
-			case ShaderDataType::Float3: return GL_FLOAT;
-			case ShaderDataType::Float4: return GL_FLOAT;
-			case ShaderDataType::Mat3: return GL_FLOAT;
-			case ShaderDataType::Mat4: return GL_FLOAT;
-			case ShaderDataType::Int: return GL_INT;
-			case ShaderDataType::Int2: return GL_INT;
-			case ShaderDataType::Int3: return GL_INT;
-			case ShaderDataType::Int4: return GL_INT;
-			case ShaderDataType::Bool: return GL_BOOL;
-		}
-
-		GE_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
-	}
-
 	App::App()
 	{
 		GE_CORE_ASSERT(!instance, "App already exists!");
@@ -38,39 +19,53 @@ namespace GamEngine {
 		m_imgui_layer = new ImGuiLayer();
 		push_overlay(m_imgui_layer);
 
-		glGenVertexArrays(1, &m_vertex_array);
-		glBindVertexArray(m_vertex_array);
+		m_triangle_vertex_array.reset(VertexArray::create());
 
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f
+		float verticesTriangle[3 * 3] = {
+			-0.5f, -0.5f, 1.0f,
+			0.5f, -0.5f, 1.0f,
+			0.0f, 0.5f, 1.0f
 		};
+		m_triangle_vertex_buffer.reset(VertexBuffer::create(verticesTriangle, sizeof(verticesTriangle)));
 
-		m_vertex_buffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
-		
 		{
-			BufferLayout layout = {
+			BufferLayout layout_triangle = {
 				{ ShaderDataType::Float3, "i_position"}
 			};
-			m_vertex_buffer->set_layout(layout);
+			m_triangle_vertex_buffer->set_layout(layout_triangle);
 		}
-		uint32_t index = 0;
-		const auto& layout = m_vertex_buffer->get_layout();
-		for (const auto& element : layout) {
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(
-				index++,
-				element.get_component_count(),
-				ShaderDataTypeToGLBaseType(element.type),
-				element.normalized ? GL_TRUE : GL_FALSE,
-				layout.get_stride(),
-				(const void*)element.offset
-			);
-		}
+		m_triangle_vertex_array->add_vertex_buffer(m_triangle_vertex_buffer);
 
-		uint32_t indices[3] = { 0, 1, 2 };
-		m_index_buffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
+		uint32_t indicesTriangle[3] = { 0, 1, 2 };
+		m_triangle_index_buffer.reset(IndexBuffer::create(indicesTriangle, sizeof(indicesTriangle) / sizeof(uint32_t)));
+		m_triangle_vertex_array->set_index_buffer(m_triangle_index_buffer);
+
+		m_triangle_vertex_array->unbind();
+
+
+		m_square_vertex_array.reset(VertexArray::create());
+
+		float verticesSquare[3 * 4] = {
+			-0.2f, -0.2f, 0.0f,
+			-0.2f, 0.2f, 0.0f,
+			0.2f, 0.2f, 0.0f,
+			0.2f, -0.2f, 0.0f
+		};
+		m_square_vertex_buffer.reset(VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
+
+		{
+			BufferLayout layoutSquare = {
+				{ ShaderDataType::Float3, "i_position"}
+			};
+			m_square_vertex_buffer->set_layout(layoutSquare);
+		}
+		m_square_vertex_array->add_vertex_buffer(m_square_vertex_buffer);
+
+		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
+		m_square_index_buffer.reset(IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+		m_square_vertex_array->set_index_buffer(m_square_index_buffer);
+
+		m_square_vertex_array->unbind();
 
 		std::string vertex_src = R"(
 			#version 330 core
@@ -138,8 +133,11 @@ namespace GamEngine {
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_shader->bind();
-			glBindVertexArray(m_vertex_array);
-			glDrawElements(GL_TRIANGLES, m_index_buffer->get_count(), GL_UNSIGNED_INT, nullptr);
+			m_triangle_vertex_array->bind();
+			glDrawElements(GL_TRIANGLES, m_triangle_index_buffer->get_count(), GL_UNSIGNED_INT, nullptr);
+
+			m_square_vertex_array->bind();
+			glDrawElements(GL_TRIANGLES, m_square_index_buffer->get_count(), GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layer_stack)
 				layer->on_update();

@@ -14,6 +14,7 @@ namespace GamEngine {
 		case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
 		}
 
+		GE_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

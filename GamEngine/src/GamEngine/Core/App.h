@@ -11,6 +11,7 @@
 #include "GamEngine/Renderer/Shaders/Shader.h"
 #include <GamEngine/Renderer/Buffers/VertexBuffer.h>
 #include <GamEngine/Renderer/Buffers/IndexBuffer.h>
+#include <GamEngine/Renderer/Arrays/VertexArray.h>
 
 namespace GamEngine {
 	class App
@@ -28,10 +29,15 @@ namespace GamEngine {
 		inline static App& get() { return *instance; }
 		inline Window& get_window() { return *m_window; }
 
-		unsigned int m_vertex_array;
-		std::unique_ptr<Shader> m_shader;
-		std::unique_ptr<VertexBuffer> m_vertex_buffer;
-		std::unique_ptr<IndexBuffer> m_index_buffer;
+		std::shared_ptr<Shader> m_shader;
+
+		std::shared_ptr<VertexArray> m_triangle_vertex_array;
+		std::shared_ptr<VertexBuffer> m_triangle_vertex_buffer;
+		std::shared_ptr<IndexBuffer> m_triangle_index_buffer;
+
+		std::shared_ptr<VertexArray> m_square_vertex_array;
+		std::shared_ptr<VertexBuffer> m_square_vertex_buffer;
+		std::shared_ptr<IndexBuffer> m_square_index_buffer;
 	private:
 		bool on_window_close(WindowCloseEvent& e);
 
