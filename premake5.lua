@@ -16,10 +16,11 @@ workspace "GamEngine"
 output_dir = "%{cfg.architecture}/%{cfg.buildcfg}/%{cfg.system}"
 
 include_dirs = {}
-include_dirs["GLFW"] = "%{wks.locations}/GamEngine/lib/GLFW/include"
-include_dirs["Glad"] = "%{wks.locations}/GamEngine/lib/Glad/include"
-include_dirs["ImGui"] = "%{wks.locations}/GamEngine/lib/ImGui"
-include_dirs["glm"] = "%{wks.locations}/GamEngine/lib/glm"
+include_dirs["spdlog"]  = "%{wks.location}/GamEngine/lib/spdlog/include"
+include_dirs["GLFW"]    = "%{wks.location}/GamEngine/lib/GLFW/include"
+include_dirs["Glad"]    = "%{wks.location}/GamEngine/lib/Glad/include"
+include_dirs["ImGui"]   = "%{wks.location}/GamEngine/lib/ImGui"
+include_dirs["glm"]     = "%{wks.location}/GamEngine/lib/glm"
 
 include "GamEngine"
 include "Sandbox"

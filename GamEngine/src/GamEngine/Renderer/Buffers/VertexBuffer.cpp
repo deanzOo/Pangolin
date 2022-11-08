@@ -8,10 +8,10 @@ namespace GamEngine {
 	VertexBuffer* VertexBuffer::create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::get_api()) {
-		case RendererAPI::None: 
+		case RendererAPI::API::None: 
 			GE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
+		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size);
 		}
 
 		GE_CORE_ASSERT(false, "Unknown RendererAPI!");

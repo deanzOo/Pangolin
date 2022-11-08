@@ -1,7 +1,7 @@
 #include "gepch.h"
 #include "App.h"
 #include "Input.h"
-#include <glad/glad.h>
+#include "GamEngine/Renderer/Renderer.h"
 #include <GamEngine/Renderer/Buffers/BufferLayout.h>
 
 namespace GamEngine {
@@ -19,31 +19,31 @@ namespace GamEngine {
 		m_imgui_layer = new ImGuiLayer();
 		push_overlay(m_imgui_layer);
 
-		m_triangle_vertex_array.reset(VertexArray::create());
+		m_triangle_vertex_array.reset(GamEngine::VertexArray::create());
 
 		float verticesTriangle[3 * 3] = {
 			-0.5f, -0.5f, 1.0f,
 			0.5f, -0.5f, 1.0f,
 			0.0f, 0.5f, 1.0f
 		};
-		m_triangle_vertex_buffer.reset(VertexBuffer::create(verticesTriangle, sizeof(verticesTriangle)));
+		m_triangle_vertex_buffer.reset(GamEngine::VertexBuffer::create(verticesTriangle, sizeof(verticesTriangle)));
 
 		{
-			BufferLayout layout_triangle = {
-				{ ShaderDataType::Float3, "i_position"}
+			GamEngine::BufferLayout layout_triangle = {
+				{ GamEngine::ShaderDataType::Float3, "i_position"}
 			};
 			m_triangle_vertex_buffer->set_layout(layout_triangle);
 		}
 		m_triangle_vertex_array->add_vertex_buffer(m_triangle_vertex_buffer);
 
 		uint32_t indicesTriangle[3] = { 0, 1, 2 };
-		m_triangle_index_buffer.reset(IndexBuffer::create(indicesTriangle, sizeof(indicesTriangle) / sizeof(uint32_t)));
+		m_triangle_index_buffer.reset(GamEngine::IndexBuffer::create(indicesTriangle, sizeof(indicesTriangle) / sizeof(uint32_t)));
 		m_triangle_vertex_array->set_index_buffer(m_triangle_index_buffer);
 
 		m_triangle_vertex_array->unbind();
 
 
-		m_square_vertex_array.reset(VertexArray::create());
+		m_square_vertex_array.reset(GamEngine::VertexArray::create());
 
 		float verticesSquare[3 * 4] = {
 			-0.2f, -0.2f, 0.0f,
@@ -51,18 +51,18 @@ namespace GamEngine {
 			0.2f, 0.2f, 0.0f,
 			0.2f, -0.2f, 0.0f
 		};
-		m_square_vertex_buffer.reset(VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
+		m_square_vertex_buffer.reset(GamEngine::VertexBuffer::create(verticesSquare, sizeof(verticesSquare)));
 
 		{
-			BufferLayout layoutSquare = {
-				{ ShaderDataType::Float3, "i_position"}
+			GamEngine::BufferLayout layoutSquare = {
+				{ GamEngine::ShaderDataType::Float3, "i_position"}
 			};
 			m_square_vertex_buffer->set_layout(layoutSquare);
 		}
 		m_square_vertex_array->add_vertex_buffer(m_square_vertex_buffer);
 
 		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
-		m_square_index_buffer.reset(IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+		m_square_index_buffer.reset(GamEngine::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
 		m_square_vertex_array->set_index_buffer(m_square_index_buffer);
 
 		m_square_vertex_array->unbind();
@@ -92,7 +92,7 @@ namespace GamEngine {
 			}
 		)";
 
-		m_shader.reset(Shader::create(vertex_src, fragment_src));
+		m_shader.reset(GamEngine::Shader::create(vertex_src, fragment_src));
 	}
 
 	App::~App()
@@ -130,14 +130,16 @@ namespace GamEngine {
 
 	void App::run() {
 		while (running) {
-			glClear(GL_COLOR_BUFFER_BIT);
+			GamEngine::RenderCommand::set_clear_color({ 1.0f, 1.0f, 1.0f, 0.0f });
+			GamEngine::RenderCommand::clear();
+
+			GamEngine::Renderer::begin_scene();
 
 			m_shader->bind();
-			m_triangle_vertex_array->bind();
-			glDrawElements(GL_TRIANGLES, m_triangle_index_buffer->get_count(), GL_UNSIGNED_INT, nullptr);
+			GamEngine::Renderer::submit(m_triangle_vertex_array);
+			GamEngine::Renderer::submit(m_square_vertex_array);
 
-			m_square_vertex_array->bind();
-			glDrawElements(GL_TRIANGLES, m_square_index_buffer->get_count(), GL_UNSIGNED_INT, nullptr);
+			GamEngine::Renderer::end_scene();
 
 			for (Layer* layer : m_layer_stack)
 				layer->on_update();

@@ -8,10 +8,10 @@ namespace GamEngine {
 	IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t size)
 	{
 		switch (Renderer::get_api()) {
-		case RendererAPI::None:
-			GE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+		case RendererAPI::API::None:
+			GE_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, size);
+		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, size);
 		}
 
 		return nullptr;

@@ -16,7 +16,8 @@ project "Sandbox"
     includedirs {
         "%{wks.location}/GamEngine/lib/spdlog/include",
         "%{wks.location}/GamEngine/src",
-        "%{wks.location}/GamEngine/lib"
+        "%{wks.location}/GamEngine/lib",
+		"%{include_dirs.glm}"
     }
 
     links { "GamEngine" }

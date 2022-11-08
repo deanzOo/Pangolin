@@ -14,8 +14,8 @@ project "GamEngine"
     files {
         "src/**.h",
         "src/**.cpp",
-        "lib/glm/glm/**.hpp",
-        "lib/glm/glm/**.inl"
+        "lib/glm/**.hpp",
+        "lib/glm/**.inl"
     }
 
     defines {
@@ -24,11 +24,11 @@ project "GamEngine"
 
     includedirs {
         "src",
-        "lib/spdlog/include",
-        "lib/GLFW/include",
-        "lib/Glad/include",
-        "lib/ImGui",
-        "lib/glm"
+        "%{include_dirs.spdlog}",
+		"%{include_dirs.GLFW}",
+		"%{include_dirs.Glad}",
+		"%{include_dirs.ImGui}",
+		"%{include_dirs.glm}"
     }
 
     links {
