@@ -11,7 +11,9 @@ namespace GamEngine {
 
 		virtual void bind() const override;
 		virtual void unbind() const override;
+
+		void upload_uniform_mat4(const std::string& name, const glm::mat4& matrix) override;
 	private:
-		uint32_t m_renderer_id;
+		uint32_t _renderer_id;
 	};
 }

@@ -1,7 +1,7 @@
 #include "ExampleLayer.h"
 #include <GamEngine/Renderer/Renderer.h>
 
-ExampleLayer::ExampleLayer() : Layer("Exmaple") {
+ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f) {
 
 	m_triangle_vertex_array.reset(GamEngine::VertexArray::create());
 
@@ -56,11 +56,13 @@ ExampleLayer::ExampleLayer() : Layer("Exmaple") {
 
 			layout(location = 0) in vec3 i_position;
 
+			uniform mat4 u_view_projection;
+
 			out vec3 o_position;
 
 			void main() {
-				o_position = i_position * 0.5 + 0.5;
-				gl_Position = vec4(i_position, 1.0);
+				o_position = i_position;
+				gl_Position = u_view_projection * vec4(i_position, 1.0);
 			}
 		)";
 
@@ -84,11 +86,6 @@ void ExampleLayer::on_attach()
 	m_shader->bind();
 }
 
-void ExampleLayer::on_detach()
-{
-	m_shader->unbind();
-}
-
 void ExampleLayer::on_update()
 {
 	GamEngine::RenderCommand::set_clear_color({ 1.0f, 1.0f, 1.0f, 0.0f });
@@ -97,6 +94,7 @@ void ExampleLayer::on_update()
 	GamEngine::Renderer::begin_scene();
 
 	m_shader->bind();
+	m_shader->upload_uniform_mat4("u_view_projection", _camera.get_view_projection_matrix());
 	GamEngine::Renderer::submit(m_triangle_vertex_array);
 	GamEngine::Renderer::submit(m_square_vertex_array);
 

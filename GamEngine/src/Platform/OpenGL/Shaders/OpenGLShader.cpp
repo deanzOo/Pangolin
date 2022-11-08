@@ -3,6 +3,8 @@
 
 #include "glad/glad.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace GamEngine {
 	OpenGLShader::OpenGLShader(const std::string& vertex_src, const std::string& fragment_src) {
 		// Create an empty vertex shader handle
@@ -73,29 +75,29 @@ namespace GamEngine {
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
 		// Get a program object.
-		m_renderer_id = glCreateProgram();
+		_renderer_id = glCreateProgram();
 
 		// Attach our shaders to our program
-		glAttachShader(m_renderer_id, vertex_shader);
-		glAttachShader(m_renderer_id, fragment_shader);
+		glAttachShader(_renderer_id, vertex_shader);
+		glAttachShader(_renderer_id, fragment_shader);
 
 		// Link our program
-		glLinkProgram(m_renderer_id);
+		glLinkProgram(_renderer_id);
 
 		// Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint is_linked = 0;
-		glGetProgramiv(m_renderer_id, GL_LINK_STATUS, (int*)&is_linked);
+		glGetProgramiv(_renderer_id, GL_LINK_STATUS, (int*)&is_linked);
 		if (is_linked == GL_FALSE)
 		{
 			GLint max_length = 0;
-			glGetProgramiv(m_renderer_id, GL_INFO_LOG_LENGTH, &max_length);
+			glGetProgramiv(_renderer_id, GL_INFO_LOG_LENGTH, &max_length);
 
 			// The maxLength includes the NULL character
 			std::vector<GLchar> info_log(max_length);
-			glGetProgramInfoLog(m_renderer_id, max_length, &max_length, &info_log[0]);
+			glGetProgramInfoLog(_renderer_id, max_length, &max_length, &info_log[0]);
 
 			// We don't need the program anymore.
-			glDeleteProgram(m_renderer_id);
+			glDeleteProgram(_renderer_id);
 			// Don't leak shaders either.
 			glDeleteShader(vertex_shader);
 			glDeleteShader(fragment_shader);
@@ -108,23 +110,29 @@ namespace GamEngine {
 		}
 
 		// Always detach shaders after a successful link.
-		glDetachShader(m_renderer_id, vertex_shader);
-		glDetachShader(m_renderer_id, fragment_shader);
+		glDetachShader(_renderer_id, vertex_shader);
+		glDetachShader(_renderer_id, fragment_shader);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		glDeleteProgram(m_renderer_id);
+		glDeleteProgram(_renderer_id);
 	}
 
 	void OpenGLShader::bind() const
 	{
-		glUseProgram(m_renderer_id);
+		glUseProgram(_renderer_id);
 	}
 
 	void OpenGLShader::unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	void OpenGLShader::upload_uniform_mat4(const std::string& name, const glm::mat4& matrix)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 }
