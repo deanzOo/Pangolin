@@ -10,19 +10,20 @@ public:
 	ExampleLayer();
 
 	virtual void on_attach() override;
+	virtual void on_detach() override;
 	virtual void on_update() override;
 	void on_event(GamEngine::Event& event) override;
 
 private:
-	std::shared_ptr<GamEngine::Shader> m_shader;
+	std::shared_ptr<GamEngine::Shader> _shader;
 
-	std::shared_ptr<GamEngine::VertexArray> m_triangle_vertex_array;
-	std::shared_ptr<GamEngine::VertexBuffer> m_triangle_vertex_buffer;
-	std::shared_ptr<GamEngine::IndexBuffer> m_triangle_index_buffer;
+	std::shared_ptr<GamEngine::VertexArray> _triangle_vertex_array;
+	std::shared_ptr<GamEngine::VertexBuffer> _triangle_vertex_buffer;
+	std::shared_ptr<GamEngine::IndexBuffer> _triangle_index_buffer;
 
-	std::shared_ptr<GamEngine::VertexArray> m_square_vertex_array;
-	std::shared_ptr<GamEngine::VertexBuffer> m_square_vertex_buffer;
-	std::shared_ptr<GamEngine::IndexBuffer> m_square_index_buffer;
+	std::shared_ptr<GamEngine::VertexArray> _square_vertex_array;
+	std::shared_ptr<GamEngine::VertexBuffer> _square_vertex_buffer;
+	std::shared_ptr<GamEngine::IndexBuffer> _square_index_buffer;
 
 	GamEngine::OrthographicCamera _camera;
 };

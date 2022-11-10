@@ -23,7 +23,7 @@ namespace GamEngine {
 		glm::mat4 _view_matrix;
 		glm::mat4 _view_projection_matrix;
 
-		glm::vec3 _position;
+		glm::vec3 _position = { 0.0f, 0.0f, 0.0f };
 		float _rotation = 0.0f;
 	};
 }

@@ -24,7 +24,7 @@ namespace GamEngine {
 		glm::mat4 base_mtx			= glm::mat4(1.0f);
 		glm::vec3 rotation_axis		= glm::vec3(0, 0, 1);
 		glm::mat4 translated_mtx	= glm::translate(base_mtx, _position);
-		glm::mat4 rotated_mtx		= glm::rotate(base_mtx, _rotation, rotation_axis);
+		glm::mat4 rotated_mtx		= glm::rotate(base_mtx, glm::radians(_rotation), rotation_axis);
 		
 		glm::mat4 transform			= translated_mtx * rotated_mtx;
 
