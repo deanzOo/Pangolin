@@ -2,6 +2,7 @@
 #include <GamEngine/Renderer/Renderer.h>
 #include <GamEngine/Core/KeyCodes.h>
 #include <GamEngine/Events/Event.h>
+#include <GamEngine/Core/Input.h>
 
 ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f) {
 
@@ -95,11 +96,18 @@ void ExampleLayer::on_detach()
 
 void ExampleLayer::on_update()
 {
+	glm::vec3 new_position = _camera.get_position();
+	if (GamEngine::Input::is_key_pressed(GE_KEY_W)) new_position.y -= 0.05f;
+	if (GamEngine::Input::is_key_pressed(GE_KEY_A)) new_position.x += 0.05f;
+	if (GamEngine::Input::is_key_pressed(GE_KEY_S)) new_position.y += 0.05f;
+	if (GamEngine::Input::is_key_pressed(GE_KEY_D)) new_position.x -= 0.05f;
+	_camera.set_position(new_position);
+
+	if (GamEngine::Input::is_key_pressed(GE_KEY_UP)) _camera.set_rotation(_camera.get_rotation() + 5.0f);
+	if (GamEngine::Input::is_key_pressed(GE_KEY_DOWN)) _camera.set_rotation(_camera.get_rotation() - 5.0f);
+
 	GamEngine::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1 });
 	GamEngine::RenderCommand::clear();
-
-	// _camera.set_position({ 0.2f, 0.1f, 0 });
-	// _camera.set_rotation(45.0f);
 
 	GamEngine::Renderer::begin_scene(_camera);
 
@@ -116,16 +124,6 @@ void ExampleLayer::on_event(GamEngine::Event& event) {
 
 bool ExampleLayer::on_key_pressed(GamEngine::KeyPressedEvent& event)
 {
-	GamEngine::KeyPressedEvent& e = (GamEngine::KeyPressedEvent&)event;
-	glm::vec3 new_position = _camera.get_position();
-	if (e.get_keycode() == GE_KEY_W) new_position.y -= 0.05f;
-	if (e.get_keycode() == GE_KEY_A) new_position.x += 0.05f;
-	if (e.get_keycode() == GE_KEY_S) new_position.y += 0.05f;
-	if (e.get_keycode() == GE_KEY_D) new_position.x -= 0.05f;
-	_camera.set_position(new_position);
-
-	if (e.get_keycode() == GE_KEY_UP) _camera.set_rotation(_camera.get_rotation() + 5.0f);
-	if (e.get_keycode() == GE_KEY_DOWN) _camera.set_rotation(_camera.get_rotation() - 5.0f);
-	GE_CLIENT_TRACE("{0}", (char)e.get_keycode());
-	return true;
+	GE_CLIENT_TRACE("{0}", (char)event.get_keycode());
+	return false;
 }
