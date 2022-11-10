@@ -1,6 +1,7 @@
 #include "ExampleLayer.h"
 #include <GamEngine/Renderer/Renderer.h>
 #include <GamEngine/Core/KeyCodes.h>
+#include <GamEngine/Events/Event.h>
 
 ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f) {
 
@@ -109,17 +110,22 @@ void ExampleLayer::on_update()
 }
 
 void ExampleLayer::on_event(GamEngine::Event& event) {
-	if (event.get_event_type() == GamEngine::EventType::KeyPressed) {
-		GamEngine::KeyPressedEvent& e = (GamEngine::KeyPressedEvent&)event;
-		glm::vec3 new_position = _camera.get_position();
-		if (e.get_keycode() == GE_KEY_W) new_position.y -= 0.05f;
-		if (e.get_keycode() == GE_KEY_A) new_position.x += 0.05f;
-		if (e.get_keycode() == GE_KEY_S) new_position.y += 0.05f;
-		if (e.get_keycode() == GE_KEY_D) new_position.x -= 0.05f;
-		_camera.set_position(new_position);
+	GamEngine::EventDispatcher dispatcher(event);
+	dispatcher.dispatch<GamEngine::KeyPressedEvent>(GE_BIND_EVENT_FN(ExampleLayer::on_key_pressed));
+}
 
-		if (e.get_keycode() == GE_KEY_UP) _camera.set_rotation(_camera.get_rotation() + 5.0f);
-		if (e.get_keycode() == GE_KEY_DOWN) _camera.set_rotation(_camera.get_rotation() - 5.0f);
-		GE_CLIENT_TRACE("{0}", (char)e.get_keycode());
-	}
+bool ExampleLayer::on_key_pressed(GamEngine::KeyPressedEvent& event)
+{
+	GamEngine::KeyPressedEvent& e = (GamEngine::KeyPressedEvent&)event;
+	glm::vec3 new_position = _camera.get_position();
+	if (e.get_keycode() == GE_KEY_W) new_position.y -= 0.05f;
+	if (e.get_keycode() == GE_KEY_A) new_position.x += 0.05f;
+	if (e.get_keycode() == GE_KEY_S) new_position.y += 0.05f;
+	if (e.get_keycode() == GE_KEY_D) new_position.x -= 0.05f;
+	_camera.set_position(new_position);
+
+	if (e.get_keycode() == GE_KEY_UP) _camera.set_rotation(_camera.get_rotation() + 5.0f);
+	if (e.get_keycode() == GE_KEY_DOWN) _camera.set_rotation(_camera.get_rotation() - 5.0f);
+	GE_CLIENT_TRACE("{0}", (char)e.get_keycode());
+	return true;
 }

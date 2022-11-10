@@ -15,6 +15,9 @@ public:
 	void on_event(GamEngine::Event& event) override;
 
 private:
+	bool on_key_pressed(GamEngine::KeyPressedEvent& event);
+
+private:
 	std::shared_ptr<GamEngine::Shader> _shader;
 
 	std::shared_ptr<GamEngine::VertexArray> _triangle_vertex_array;
