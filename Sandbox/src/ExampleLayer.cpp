@@ -1,11 +1,14 @@
 #include "ExampleLayer.h"
+#include "Platform/OpenGL/Shaders/OpenGLShader.h"
 #include <GamEngine/Renderer/Renderer.h>
 #include <GamEngine/Core/KeyCodes.h>
 #include <GamEngine/Events/Event.h>
 #include <GamEngine/Core/Input.h>
 #include "glm/gtc/matrix_transform.hpp"
+#include "ImGui/imgui.h"
+#include "glm/gtc/type_ptr.hpp"
 
-ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f), _square_position(0.0f) {
+ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _square_position(0.0f) {
 
 	_triangle_vertex_array.reset(GamEngine::VertexArray::create());
 
@@ -63,10 +66,7 @@ ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0
 			uniform mat4 u_view_projection;
 			uniform mat4 u_transform;
 
-			out vec3 o_position;
-
 			void main() {
-				o_position = i_position;
 				gl_Position = u_view_projection * u_transform * vec4(i_position, 1.0);
 			}
 		)";
@@ -76,24 +76,24 @@ ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0
 
 			layout(location = 0) out vec4 o_color;
 
-			in vec3 o_position;
+			uniform vec3 u_color;
 
 			void main() {
-				o_color = vec4(o_position, 1.0);
+				o_color = vec4(u_color, 1.0);
 			}
 		)";
 
-	_shader.reset(GamEngine::Shader::create(vertex_src, fragment_src));
+	_flat_color_shader.reset(GamEngine::Shader::create(vertex_src, fragment_src));
 }
 
 void ExampleLayer::on_attach()
 {
-	_shader->bind();
+	_flat_color_shader->bind();
 }
 
 void ExampleLayer::on_detach()
 {
-	_shader->unbind();
+	_flat_color_shader->unbind();
 }
 
 void ExampleLayer::on_update(GamEngine::Timestep step)
@@ -113,23 +113,48 @@ void ExampleLayer::on_update(GamEngine::Timestep step)
 	_camera.set_position(new_camera_position);
 	_camera.set_rotation(new_camera_rotation);
 
-	float _timed_square_move_spd = _square_move_spd * step;
-	if (GamEngine::Input::is_key_pressed(GE_KEY_I)) _square_position.y += _timed_square_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_J)) _square_position.x -= _timed_square_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_K)) _square_position.y -= _timed_square_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_L)) _square_position.x += _timed_square_move_spd;
-
-	glm::mat4 square_transform = glm::translate(glm::mat4(1.0f), _square_position);
-
 	GamEngine::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
 	GamEngine::RenderCommand::clear();
 
 	GamEngine::Renderer::begin_scene(_camera);
 
-	GamEngine::Renderer::submit(_shader, _triangle_vertex_array);
-	GamEngine::Renderer::submit(_shader, _square_vertex_array, square_transform);
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+
+	/*
+	* * * Example future API to render materials
+	* 
+	* GamEngine::MaterialRef material = new GamEngine::Material(_flat_color_shader);
+	* GamEngine::MaterialInstanceRef material_instance = new GamEngine::MaterialInstance(material);
+	* 
+	* material_instance->set_value("u_color", red);
+	* material_instance->set_texture("u_texture_map", texture);
+	* sqaure_mash->set_material(material_instance);
+	*/
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->bind();
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
+
+	for (int y = 0; y < 10; y++) {
+		for (int x = 0; x < 10; x++) {
+			glm::vec3 pos(x * 0.1f, y * 0.1f, 0.0f);
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+			GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, transform);
+		}
+	}
+
+	glm::vec4 green(0.2f, 0.8f, 0.3f, 1.0f);
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float4("u_color", green);
+	GamEngine::Renderer::submit(_flat_color_shader, _triangle_vertex_array);
 
 	GamEngine::Renderer::end_scene();
+}
+
+void ExampleLayer::on_imgui_render()
+{
+	ImGui::Begin("Settings");
+
+	ImGui::ColorEdit3("Square Color", glm::value_ptr(_square_color));
+
+	ImGui::End();
 }
 
 void ExampleLayer::on_event(GamEngine::Event& event) {

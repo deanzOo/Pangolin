@@ -129,6 +129,43 @@ namespace GamEngine {
 		glUseProgram(0);
 	}
 
+
+	void OpenGLShader::upload_uniform_int(const std::string& name, int value)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::upload_uniform_float(const std::string& name, float value)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform1f(location, value);
+	}
+	
+	void OpenGLShader::upload_uniform_float2(const std::string& name, const glm::vec2& values)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform2f(location, values.x, values.y);
+	}
+
+	void OpenGLShader::upload_uniform_float3(const std::string& name, const glm::vec3& values)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform3f(location, values.x, values.y, values.z);
+	}
+
+	void OpenGLShader::upload_uniform_float4(const std::string& name, const glm::vec4& values)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform4f(location, values.x, values.y, values.z, values.w);
+	}
+
+	void OpenGLShader::upload_uniform_mat3(const std::string& name, const glm::mat3& matrix)
+	{
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
 	void OpenGLShader::upload_uniform_mat4(const std::string& name, const glm::mat4& matrix)
 	{
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());

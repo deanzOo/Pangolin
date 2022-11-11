@@ -13,13 +13,14 @@ public:
 	virtual void on_attach() override;
 	virtual void on_detach() override;
 	virtual void on_update(GamEngine::Timestep step) override;
+	virtual void on_imgui_render() override;
 	void on_event(GamEngine::Event& event) override;
 
 private:
 	bool on_key_pressed(GamEngine::KeyPressedEvent& event);
 
 private:
-	std::shared_ptr<GamEngine::Shader> _shader;
+	std::shared_ptr<GamEngine::Shader> _flat_color_shader;
 
 	std::shared_ptr<GamEngine::VertexArray> _triangle_vertex_array;
 	std::shared_ptr<GamEngine::VertexBuffer> _triangle_vertex_buffer;
@@ -30,6 +31,7 @@ private:
 	std::shared_ptr<GamEngine::IndexBuffer> _square_index_buffer;
 	glm::vec3 _square_position;
 	float _square_move_spd = 2.0f;
+	glm::vec3 _square_color = { 0.2f, 0.3f, 0.8f };
 
 	GamEngine::OrthographicCamera _camera;
 	float _camera_move_spd = 2.0f;
