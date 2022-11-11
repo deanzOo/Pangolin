@@ -8,32 +8,9 @@
 #include "ImGui/imgui.h"
 #include "glm/gtc/type_ptr.hpp"
 
-ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _square_position(0.0f) {
-
-	_triangle_vertex_array.reset(GamEngine::VertexArray::create());
-
-	float verticesTriangle[3 * 3] = {
-		-0.5f, -0.5f, 1.0f,
-		0.5f, -0.5f, 1.0f,
-		0.0f, 0.5f, 1.0f
-	};
-	_triangle_vertex_buffer.reset(GamEngine::VertexBuffer::create(verticesTriangle, sizeof(verticesTriangle)));
-
-	{
-		GamEngine::BufferLayout layout_triangle = {
-			{ GamEngine::ShaderDataType::Float3, "i_position"}
-		};
-		_triangle_vertex_buffer->set_layout(layout_triangle);
-	}
-	_triangle_vertex_array->add_vertex_buffer(_triangle_vertex_buffer);
-
-	uint32_t indicesTriangle[3] = { 0, 1, 2 };
-	_triangle_index_buffer.reset(GamEngine::IndexBuffer::create(indicesTriangle, sizeof(indicesTriangle) / sizeof(uint32_t)));
-	_triangle_vertex_array->set_index_buffer(_triangle_index_buffer);
-
-	_triangle_vertex_array->unbind();
-
-
+ExampleLayer::ExampleLayer() 
+	: Layer("Exmaple"), _camera(-1.6f, 1.6f, -0.9f, 0.9f)
+{
 	_square_vertex_array.reset(GamEngine::VertexArray::create());
 
 	float verticesSquare[3 * 4] = {
@@ -98,18 +75,19 @@ void ExampleLayer::on_detach()
 
 void ExampleLayer::on_update(GamEngine::Timestep step)
 {
-	// GE_CLIENT_TRACE("Delta time: {0}s ({1}ms)", step.get_seconds(), step.get_milliseconds());
-	
 	float _timed_camera_move_spd = _camera_move_spd * step;
 	float _timed_camera_rotate_spd = _camera_rotate_spd * step;
+
 	glm::vec3 new_camera_position = _camera.get_position();
 	float new_camera_rotation = _camera.get_rotation();
+
 	if (GamEngine::Input::is_key_pressed(GE_KEY_W)) new_camera_position.y -= _timed_camera_move_spd;
 	else if (GamEngine::Input::is_key_pressed(GE_KEY_A)) new_camera_position.x += _timed_camera_move_spd;
 	else if (GamEngine::Input::is_key_pressed(GE_KEY_S)) new_camera_position.y += _timed_camera_move_spd;
 	else if (GamEngine::Input::is_key_pressed(GE_KEY_D)) new_camera_position.x -= _timed_camera_move_spd;
 	else if (GamEngine::Input::is_key_pressed(GE_KEY_UP)) new_camera_rotation += _timed_camera_rotate_spd;
 	else if (GamEngine::Input::is_key_pressed(GE_KEY_DOWN)) new_camera_rotation -= _timed_camera_rotate_spd;
+
 	_camera.set_position(new_camera_position);
 	_camera.set_rotation(new_camera_rotation);
 
@@ -120,30 +98,16 @@ void ExampleLayer::on_update(GamEngine::Timestep step)
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
 
-	/*
-	* * * Example future API to render materials
-	* 
-	* GamEngine::MaterialRef material = new GamEngine::Material(_flat_color_shader);
-	* GamEngine::MaterialInstanceRef material_instance = new GamEngine::MaterialInstance(material);
-	* 
-	* material_instance->set_value("u_color", red);
-	* material_instance->set_texture("u_texture_map", texture);
-	* sqaure_mash->set_material(material_instance);
-	*/
 	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->bind();
 	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
 
-	for (int y = 0; y < 10; y++) {
-		for (int x = 0; x < 10; x++) {
+	for (float y = -4.0f; y < 4.0f; y += 1.0f) {
+		for (float x = -5.0f; x < 5.0f; x += 1.0f) {
 			glm::vec3 pos(x * 0.1f, y * 0.1f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 			GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, transform);
 		}
 	}
-
-	glm::vec4 green(0.2f, 0.8f, 0.3f, 1.0f);
-	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float4("u_color", green);
-	GamEngine::Renderer::submit(_flat_color_shader, _triangle_vertex_array);
 
 	GamEngine::Renderer::end_scene();
 }

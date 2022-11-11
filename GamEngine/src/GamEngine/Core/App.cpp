@@ -13,10 +13,10 @@ namespace GamEngine {
 		GE_CORE_ASSERT(!instance, "App already exists!");
 		instance = this;
 
-		_window = std::unique_ptr<Window>(Window::create());
+		_window = Scope<Window>(Window::create());
 		_window->set_event_callback(GE_BIND_EVENT_FN(App::on_event));
 
-		_time = std::unique_ptr<Time>(Time::create());
+		_time = Scope<Time>(Time::create());
 
 		_imgui_layer = new ImGuiLayer();
 		push_overlay(_imgui_layer);

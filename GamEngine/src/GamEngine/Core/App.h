@@ -32,12 +32,12 @@ namespace GamEngine {
 	private:
 		bool _running = true;
 
-		std::unique_ptr<Window> _window;
+		Scope<Window> _window;
 
 		ImGuiLayer* _imgui_layer;
 		LayerStack _layer_stack;
 
-		std::unique_ptr<Time> _time;
+		Scope<Time> _time;
 		float _last_frame_time;
 
 		static App* instance;

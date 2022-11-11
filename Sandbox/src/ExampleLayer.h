@@ -20,16 +20,11 @@ private:
 	bool on_key_pressed(GamEngine::KeyPressedEvent& event);
 
 private:
-	std::shared_ptr<GamEngine::Shader> _flat_color_shader;
+	GamEngine::Ref<GamEngine::Shader> _flat_color_shader;
 
-	std::shared_ptr<GamEngine::VertexArray> _triangle_vertex_array;
-	std::shared_ptr<GamEngine::VertexBuffer> _triangle_vertex_buffer;
-	std::shared_ptr<GamEngine::IndexBuffer> _triangle_index_buffer;
-
-	std::shared_ptr<GamEngine::VertexArray> _square_vertex_array;
-	std::shared_ptr<GamEngine::VertexBuffer> _square_vertex_buffer;
-	std::shared_ptr<GamEngine::IndexBuffer> _square_index_buffer;
-	glm::vec3 _square_position;
+	GamEngine::Ref<GamEngine::VertexArray> _square_vertex_array;
+	GamEngine::Ref<GamEngine::VertexBuffer> _square_vertex_buffer;
+	GamEngine::Ref<GamEngine::IndexBuffer> _square_index_buffer;
 	float _square_move_spd = 2.0f;
 	glm::vec3 _square_color = { 0.2f, 0.3f, 0.8f };
 
