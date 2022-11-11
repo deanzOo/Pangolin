@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GamEngine/Core/Core.h"
+#include "GamEngine/Core/Timestep.h"
 #include "GamEngine/Events/Event.h"
 #include "GamEngine/Events/MouseEvent.h"
 #include "GamEngine/Events/KeyEvent.h"
@@ -15,7 +16,7 @@ namespace GamEngine {
 
 		virtual void on_attach() {}
 		virtual void on_detach() {}
-		virtual void on_update() {}
+		virtual void on_update(Timestep step) {}
 		virtual void on_imgui_render() {}
 		virtual void on_event(Event& event) {}
 

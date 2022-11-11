@@ -3,8 +3,9 @@
 #include <GamEngine/Core/KeyCodes.h>
 #include <GamEngine/Events/Event.h>
 #include <GamEngine/Core/Input.h>
+#include "glm/gtc/matrix_transform.hpp"
 
-ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f) {
+ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0f), _square_position(0.0f) {
 
 	_triangle_vertex_array.reset(GamEngine::VertexArray::create());
 
@@ -60,12 +61,13 @@ ExampleLayer::ExampleLayer() : Layer("Exmaple"), _camera(-1.0f, 1.0f, -1.0f, 1.0
 			layout(location = 0) in vec3 i_position;
 
 			uniform mat4 u_view_projection;
+			uniform mat4 u_transform;
 
 			out vec3 o_position;
 
 			void main() {
 				o_position = i_position;
-				gl_Position = u_view_projection * vec4(i_position, 1.0);
+				gl_Position = u_view_projection * u_transform * vec4(i_position, 1.0);
 			}
 		)";
 
@@ -94,25 +96,38 @@ void ExampleLayer::on_detach()
 	_shader->unbind();
 }
 
-void ExampleLayer::on_update()
+void ExampleLayer::on_update(GamEngine::Timestep step)
 {
-	glm::vec3 new_position = _camera.get_position();
-	if (GamEngine::Input::is_key_pressed(GE_KEY_W)) new_position.y -= 0.05f;
-	if (GamEngine::Input::is_key_pressed(GE_KEY_A)) new_position.x += 0.05f;
-	if (GamEngine::Input::is_key_pressed(GE_KEY_S)) new_position.y += 0.05f;
-	if (GamEngine::Input::is_key_pressed(GE_KEY_D)) new_position.x -= 0.05f;
-	_camera.set_position(new_position);
+	// GE_CLIENT_TRACE("Delta time: {0}s ({1}ms)", step.get_seconds(), step.get_milliseconds());
+	
+	float _timed_camera_move_spd = _camera_move_spd * step;
+	float _timed_camera_rotate_spd = _camera_rotate_spd * step;
+	glm::vec3 new_camera_position = _camera.get_position();
+	float new_camera_rotation = _camera.get_rotation();
+	if (GamEngine::Input::is_key_pressed(GE_KEY_W)) new_camera_position.y -= _timed_camera_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_A)) new_camera_position.x += _timed_camera_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_S)) new_camera_position.y += _timed_camera_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_D)) new_camera_position.x -= _timed_camera_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_UP)) new_camera_rotation += _timed_camera_rotate_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_DOWN)) new_camera_rotation -= _timed_camera_rotate_spd;
+	_camera.set_position(new_camera_position);
+	_camera.set_rotation(new_camera_rotation);
 
-	if (GamEngine::Input::is_key_pressed(GE_KEY_UP)) _camera.set_rotation(_camera.get_rotation() + 5.0f);
-	if (GamEngine::Input::is_key_pressed(GE_KEY_DOWN)) _camera.set_rotation(_camera.get_rotation() - 5.0f);
+	float _timed_square_move_spd = _square_move_spd * step;
+	if (GamEngine::Input::is_key_pressed(GE_KEY_I)) _square_position.y += _timed_square_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_J)) _square_position.x -= _timed_square_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_K)) _square_position.y -= _timed_square_move_spd;
+	else if (GamEngine::Input::is_key_pressed(GE_KEY_L)) _square_position.x += _timed_square_move_spd;
 
-	GamEngine::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1 });
+	glm::mat4 square_transform = glm::translate(glm::mat4(1.0f), _square_position);
+
+	GamEngine::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
 	GamEngine::RenderCommand::clear();
 
 	GamEngine::Renderer::begin_scene(_camera);
 
 	GamEngine::Renderer::submit(_shader, _triangle_vertex_array);
-	GamEngine::Renderer::submit(_shader, _square_vertex_array);
+	GamEngine::Renderer::submit(_shader, _square_vertex_array, square_transform);
 
 	GamEngine::Renderer::end_scene();
 }
