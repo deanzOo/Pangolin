@@ -3,11 +3,13 @@
 #include "GamEngine/Renderer/Shaders/Shader.h"
 #include <glm/glm.hpp>
 
+typedef unsigned int GLenum;
+
 namespace GamEngine {
 	class OpenGLShader : public Shader {
 	public:
 	public:
-		OpenGLShader(const std::string& vertex_src, const std::string& fragment_src);
+		OpenGLShader(const std::string& path);
 		virtual ~OpenGLShader();
 
 		virtual void bind() const override;
@@ -22,6 +24,9 @@ namespace GamEngine {
 
 		void upload_uniform_mat3(const std::string& name, const glm::mat3& matrix);
 		void upload_uniform_mat4(const std::string& name, const glm::mat4& matrix);
+	private:
+		std::string read_file(const std::string& filepath);
+		std::unordered_map<GLenum, std::string> load_from_path(const std::string& path);
 	private:
 		uint32_t _renderer_id;
 	};

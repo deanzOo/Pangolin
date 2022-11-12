@@ -36,66 +36,9 @@ ExampleLayer::ExampleLayer()
 
 	_square_vertex_array->unbind();
 
-	std::string flat_color_vertex_src = R"(
-			#version 330 core
+	_flat_color_shader.reset(GamEngine::Shader::create("assets/shaders/flat_color/"));
 
-			layout(location = 0) in vec3 i_position;
-
-			uniform mat4 u_view_projection;
-			uniform mat4 u_transform;
-
-			void main() {
-				gl_Position = u_view_projection * u_transform * vec4(i_position, 1.0);
-			}
-		)";
-
-	std::string flat_color_fragment_src = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 o_color;
-
-			uniform vec3 u_color;
-
-			void main() {
-				o_color = vec4(u_color, 1.0);
-			}
-		)";
-
-	_flat_color_shader.reset(GamEngine::Shader::create(flat_color_vertex_src, flat_color_fragment_src));
-
-
-	std::string texture_vertex_src = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 i_position;
-			layout(location = 1) in vec2 i_texture;
-
-			uniform mat4 u_view_projection;
-			uniform mat4 u_transform;
-
-			out vec2 v_texture_coord;
-
-			void main() {
-				v_texture_coord = i_texture;
-				gl_Position = u_view_projection * u_transform * vec4(i_position, 1.0);
-			}
-		)";
-
-	std::string texture_fragment_src = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 o_color;
-
-			in vec2 v_texture_coord;
-
-			uniform sampler2D u_texture;
-
-			void main() {
-				o_color = texture(u_texture, v_texture_coord);
-			}
-		)";
-
-	_texture_shader.reset(GamEngine::Shader::create(texture_vertex_src, texture_fragment_src));
+	_texture_shader.reset(GamEngine::Shader::create("assets/shaders/texture/"));
 
 	_texture = GamEngine::Texture2D::create("assets/textures/example.png");
 
@@ -150,6 +93,7 @@ void ExampleLayer::on_update(GamEngine::Timestep step)
 	}
 
 	GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 	_texture->bind();
 	GamEngine::Renderer::submit(_texture_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
