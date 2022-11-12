@@ -36,24 +36,13 @@ ExampleLayer::ExampleLayer()
 
 	_square_vertex_array->unbind();
 
-	_flat_color_shader.reset(GamEngine::Shader::create("assets/shaders/flat_color/"));
-
-	_texture_shader.reset(GamEngine::Shader::create("assets/shaders/texture/"));
+	auto flat_color_shader = _shader_library.load("assets/shaders/flat_color/");
+	auto texture_shader = _shader_library.load("assets/shaders/texture/");
 
 	_texture = GamEngine::Texture2D::create("assets/textures/example.png");
 
-	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_texture_shader)->bind();
-	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_texture_shader)->upload_uniform_int("u_texture", 0);
-}
-
-void ExampleLayer::on_attach()
-{
-	_flat_color_shader->bind();
-}
-
-void ExampleLayer::on_detach()
-{
-	_flat_color_shader->unbind();
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(texture_shader)->bind();
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(texture_shader)->upload_uniform_int("u_texture", 0);
 }
 
 void ExampleLayer::on_update(GamEngine::Timestep step)
@@ -81,21 +70,25 @@ void ExampleLayer::on_update(GamEngine::Timestep step)
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->bind();
-	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
+	auto flat_color_shader = _shader_library.get("flat_color");
 
-	for (int y = 0;  y < 20; y++) {
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(flat_color_shader)->bind();
+	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(flat_color_shader)->upload_uniform_float3("u_color", _square_color);
+
+	for (int y = 0; y < 20; y++) {
 		for (int x = 0; x < 20; x++) {
 			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-			GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, transform);
+			GamEngine::Renderer::submit(flat_color_shader, _square_vertex_array, transform);
 		}
 	}
 
-	GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	auto texture_shader = _shader_library.get("texture");
+
+	GamEngine::Renderer::submit(flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 	_texture->bind();
-	GamEngine::Renderer::submit(_texture_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	GamEngine::Renderer::submit(texture_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 	GamEngine::Renderer::end_scene();
 }

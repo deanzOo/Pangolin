@@ -10,7 +10,8 @@ project "Sandbox"
 
     files {
         "src/**.h",
-        "src/**.cpp"
+        "src/**.cpp",
+        "assets/**/**.*"
     }
 
     includedirs {

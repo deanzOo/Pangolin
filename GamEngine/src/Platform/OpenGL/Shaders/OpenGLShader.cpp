@@ -13,18 +13,22 @@ namespace GamEngine {
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		else if(type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
 
-		GE_CORE_ASSERT(false, "Unkown shader type " + type);
+		GE_CORE_ASSERT(false, "Unkown shader type ({0})", type);
 		return 0;
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& path) {
-		std::unordered_map<GLenum, std::string> sources = load_from_path(path);
+		std::unordered_map<GLenum, ShaderComponents> sources = load_from_path(path);
 
 		GLuint program = glCreateProgram();
-		std::vector<unsigned int> gl_shader_ids(sources.size());
+		GE_CORE_ASSERT(sources.size() == 2, "Only support for exactly 2 shader sources currently");
+		std::array<GLenum, 2> gl_shader_ids;;
+		int shader_id = 0;
+		std::string shader_name;
 		for (auto& kv : sources) {
-			unsigned int type = kv.first;
-			const std::string& raw_source = kv.second;
+			GLenum type = kv.first;
+			const std::string& raw_source = kv.second.src;
+			shader_name = kv.second.name;
 
 			GLuint shader = glCreateShader(type);
 
@@ -35,6 +39,7 @@ namespace GamEngine {
 
 			GLint is_compiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &is_compiled);
+			GE_CORE_ASSERT(is_compiled, "Shader Compilation failure!");
 			if (is_compiled == GL_FALSE)
 			{
 				GLint max_length = 0;
@@ -46,13 +51,13 @@ namespace GamEngine {
 				glDeleteShader(shader);
 
 				GE_CORE_ERROR("{0}", info_log.data());
-				GE_CORE_ASSERT(is_compiled, "Shader Compilation failure!");
 
 				break;
 			}
 			glAttachShader(program, shader);
-			gl_shader_ids.push_back(shader);
+			gl_shader_ids[shader_id++] = shader;
 		}
+		_name = shader_name;
 
 		glLinkProgram(program);
 
@@ -70,8 +75,7 @@ namespace GamEngine {
 			for (auto id : gl_shader_ids)
 				glDeleteShader(id);
 
-			GE_CORE_ERROR("{0}", info_log.data());
-			GE_CORE_ASSERT(is_linked, "Program Link failure!");
+			GE_CORE_ASSERT(is_linked, "Program Link failure! ({0})", info_log.data());
 
 			return;
 		}
@@ -80,6 +84,11 @@ namespace GamEngine {
 			glDetachShader(program, id);
 
 		_renderer_id = program;
+	}
+
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& path): OpenGLShader(path)
+	{
+		_name = name;
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -143,8 +152,8 @@ namespace GamEngine {
 	std::string OpenGLShader::read_file(const std::string& filepath)
 	{
 		std::string result;
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
-		GE_CORE_ASSERT(in, "Could not open file " + filepath);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
+		GE_CORE_ASSERT(in, "Could not open file '{0}'", filepath);
 		in.seekg(0, std::ios::end);
 		result.resize(in.tellg());
 		in.seekg(0, std::ios::beg);
@@ -153,24 +162,30 @@ namespace GamEngine {
 		return result;
 	}
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::load_from_path(const std::string& path) {
-		std::unordered_map<GLenum, std::string> shader_sources;
+	std::unordered_map<GLenum, ShaderComponents> OpenGLShader::load_from_path(const std::string& path) {
+		std::unordered_map<GLenum, ShaderComponents> shader_sources;
 
 		for (const auto& entry : std::filesystem::directory_iterator(path)) {
 			std::string filepath = entry.path().string();
 
-			char* path = strtok(const_cast<char*>(filepath.c_str()), ".");
-			std::string str_path(path, strlen(path));
+			std::string filename = filepath.substr(filepath.find_last_of("/") + 1);
 
-			char* type = strtok(nullptr, ".");
-			std::string str_type(type, strlen(type));
+			int format_dot_count = std::count(filename.begin(), filename.end(), '.');
+			GE_CORE_ASSERT(format_dot_count == 2, "Shader asset naming convention: '<shader_name>.<shader_type>.glsl' instead receieved '{0}'", filename);
 
-			char* extension = strtok(nullptr, ".");
-			std::string str_extension(extension, strlen(extension));
+			size_t name_end_index = filename.find_first_of(".");
+			size_t type_end_index = filename.find_last_of(".");
+			size_t type_len = type_end_index - 1 - name_end_index;
 
-			std::string fullpath = str_path + "." + str_type + "." + str_extension;
-			
-			shader_sources[ShaderTypeFromString(type)] = read_file(fullpath);
+			std::string name = filename.substr(0, name_end_index);
+			std::string type = filename.substr(name_end_index + 1, type_len);
+			std::string extension = filename.substr(type_end_index + 1);
+
+			ShaderComponents shader_components;
+			shader_components.name = name;
+			shader_components.src = read_file(filepath);
+
+			shader_sources[ShaderTypeFromString(type)] = shader_components;
 		}
 
 		return shader_sources;
