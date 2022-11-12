@@ -21,6 +21,7 @@ include_dirs["GLFW"]    = "%{wks.location}/GamEngine/lib/GLFW/include"
 include_dirs["Glad"]    = "%{wks.location}/GamEngine/lib/Glad/include"
 include_dirs["ImGui"]   = "%{wks.location}/GamEngine/lib/ImGui"
 include_dirs["glm"]     = "%{wks.location}/GamEngine/lib/glm"
+include_dirs["stb"]     = "%{wks.location}/GamEngine/lib/stb"
 
 include "GamEngine"
 include "Sandbox"

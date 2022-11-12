@@ -25,12 +25,12 @@ namespace GamEngine {
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray() {
-		glCreateVertexArrays(1, &m_renderer_id);
+		glCreateVertexArrays(1, &_renderer_id);
 		bind();
 	}
 	void OpenGLVertexArray::bind() const
 	{
-		glBindVertexArray(m_renderer_id);
+		glBindVertexArray(_renderer_id);
 	}
 
 	void OpenGLVertexArray::unbind() const
@@ -58,7 +58,7 @@ namespace GamEngine {
 				(const void*)element.offset
 			);
 		}
-		m_vertex_buffers.push_back(vertex_buffer);
+		_vertex_buffers.push_back(vertex_buffer);
 	}
 
 	void OpenGLVertexArray::set_index_buffer(const Ref<IndexBuffer>& index_buffer)
@@ -66,7 +66,7 @@ namespace GamEngine {
 		bind();
 		index_buffer->bind();
 
-		m_index_buffer = index_buffer;
+		_index_buffer = index_buffer;
 	}
 
 }

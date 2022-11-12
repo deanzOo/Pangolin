@@ -15,7 +15,9 @@ project "GamEngine"
         "src/**.h",
         "src/**.cpp",
         "lib/glm/**.hpp",
-        "lib/glm/**.inl"
+        "lib/glm/**.inl",
+        "lib/stb/**.h",
+        "lib/stb/**.cpp"
     }
 
     defines {
@@ -28,7 +30,8 @@ project "GamEngine"
 		"%{include_dirs.GLFW}",
 		"%{include_dirs.Glad}",
 		"%{include_dirs.ImGui}",
-		"%{include_dirs.glm}"
+		"%{include_dirs.glm}",
+		"%{include_dirs.stb}"
     }
 
     links {

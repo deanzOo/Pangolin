@@ -5,6 +5,7 @@
 #include <GamEngine/Renderer/Shaders/Shader.h>
 #include <GamEngine/Renderer/Arrays/VertexArray.h>
 #include "GamEngine/Renderer/OrthographicCamera.h"
+#include "GamEngine/Renderer/Textures/Texture2D.h"
 
 class ExampleLayer : public GamEngine::Layer {
 public:
@@ -21,6 +22,9 @@ private:
 
 private:
 	GamEngine::Ref<GamEngine::Shader> _flat_color_shader;
+	GamEngine::Ref<GamEngine::Shader> _texture_shader;
+
+	GamEngine::Ref<GamEngine::Texture2D> _texture;
 
 	GamEngine::Ref<GamEngine::VertexArray> _square_vertex_array;
 	GamEngine::Ref<GamEngine::VertexBuffer> _square_vertex_buffer;
