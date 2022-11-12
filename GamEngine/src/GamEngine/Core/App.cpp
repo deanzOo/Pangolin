@@ -18,6 +18,8 @@ namespace GamEngine {
 
 		_time = Scope<Time>(Time::create());
 
+		Renderer::init();
+
 		_imgui_layer = new ImGuiLayer();
 		push_overlay(_imgui_layer);
 	}

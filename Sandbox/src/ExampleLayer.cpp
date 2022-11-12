@@ -141,16 +141,16 @@ void ExampleLayer::on_update(GamEngine::Timestep step)
 	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->bind();
 	std::dynamic_pointer_cast<GamEngine::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
 
-	for (int y = 5;  y < 25; y++) {
-		for (int x = 5; x < 25; x++) {
+	for (int y = 0;  y < 20; y++) {
+		for (int x = 0; x < 20; x++) {
 			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 			GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, transform);
 		}
 	}
 
+	GamEngine::Renderer::submit(_flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 	_texture->bind();
-	
 	GamEngine::Renderer::submit(_texture_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 	GamEngine::Renderer::end_scene();

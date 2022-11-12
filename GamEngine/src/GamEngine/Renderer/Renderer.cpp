@@ -6,6 +6,10 @@ namespace GamEngine {
 
 	Renderer::SceneData* Renderer::_scene_data = new Renderer::SceneData;
 
+	void Renderer::init() {
+		RenderCommand::init();
+	}
+
 	void Renderer::begin_scene(OrthographicCamera& camera)
 	{
 		_scene_data->view_projection_matrix = camera.get_view_projection_matrix();
