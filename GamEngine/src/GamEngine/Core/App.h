@@ -29,8 +29,10 @@ namespace GamEngine {
 
 	private:
 		bool on_window_close(WindowCloseEvent& e);
+		bool on_window_resize(WindowResizeEvent& e);
 	private:
 		bool _running = true;
+		bool _minimized = false;
 
 		Scope<Window> _window;
 

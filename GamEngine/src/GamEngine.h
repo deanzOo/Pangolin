@@ -20,4 +20,7 @@
 #include "GamEngine/Renderer/Buffers/BufferLayout.h"
 #include "GamEngine/Renderer/Arrays/VertexArray.h"
 
+#include "GamEngine/Renderer/Cameras/OrthographicCamera.h"
+#include "GamEngine/Renderer/Cameras/OrthographicCameraController.h"
+
 #include "GamEngine/Core/Entry.h"

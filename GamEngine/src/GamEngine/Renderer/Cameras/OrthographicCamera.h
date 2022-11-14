@@ -6,6 +6,8 @@ namespace GamEngine {
 	class OrthographicCamera {
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
+		
+		void set_projection(float left, float right, float bottom, float top);
 
 		const glm::vec3 get_position() const { return _position; }
 		float get_rotation() const { return _rotation; }

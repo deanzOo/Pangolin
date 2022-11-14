@@ -9,7 +9,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 ExampleLayer::ExampleLayer() 
-	: Layer("Exmaple"), _camera(-1.6f, 1.6f, -0.9f, 0.9f)
+	: Layer("Exmaple"), _camera_controller(1280.0f / 720.0f, true)
 {
 	_square_vertex_array.reset(GamEngine::VertexArray::create());
 
@@ -47,26 +47,12 @@ ExampleLayer::ExampleLayer()
 
 void ExampleLayer::on_update(GamEngine::Timestep step)
 {
-	float _timed_camera_move_spd = _camera_move_spd * step;
-	float _timed_camera_rotate_spd = _camera_rotate_spd * step;
-
-	glm::vec3 new_camera_position = _camera.get_position();
-	float new_camera_rotation = _camera.get_rotation();
-
-	if (GamEngine::Input::is_key_pressed(GE_KEY_W)) new_camera_position.y -= _timed_camera_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_A)) new_camera_position.x += _timed_camera_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_S)) new_camera_position.y += _timed_camera_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_D)) new_camera_position.x -= _timed_camera_move_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_UP)) new_camera_rotation += _timed_camera_rotate_spd;
-	else if (GamEngine::Input::is_key_pressed(GE_KEY_DOWN)) new_camera_rotation -= _timed_camera_rotate_spd;
-
-	_camera.set_position(new_camera_position);
-	_camera.set_rotation(new_camera_rotation);
+	_camera_controller.on_update(step);
 
 	GamEngine::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
 	GamEngine::RenderCommand::clear();
 
-	GamEngine::Renderer::begin_scene(_camera);
+	GamEngine::Renderer::begin_scene(_camera_controller.get_camera());
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -103,12 +89,5 @@ void ExampleLayer::on_imgui_render()
 }
 
 void ExampleLayer::on_event(GamEngine::Event& event) {
-	GamEngine::EventDispatcher dispatcher(event);
-	dispatcher.dispatch<GamEngine::KeyPressedEvent>(GE_BIND_EVENT_FN(ExampleLayer::on_key_pressed));
-}
-
-bool ExampleLayer::on_key_pressed(GamEngine::KeyPressedEvent& event)
-{
-	GE_CLIENT_TRACE("{0}", (char)event.get_keycode());
-	return false;
+	_camera_controller.on_event(event);
 }

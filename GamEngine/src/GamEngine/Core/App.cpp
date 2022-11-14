@@ -32,6 +32,7 @@ namespace GamEngine {
 		EventDispatcher dispatcher(e);
 
 		dispatcher.dispatch<WindowCloseEvent>(GE_BIND_EVENT_FN(App::on_window_close));
+		dispatcher.dispatch<WindowResizeEvent>(GE_BIND_EVENT_FN(App::on_window_resize));
 
 		for (auto it = _layer_stack.end(); it != _layer_stack.begin(); ) {
 			(*--it)->on_event(e);
@@ -52,9 +53,23 @@ namespace GamEngine {
 		layer->on_attach(); 
 	}
 
-	bool App::on_window_close(WindowCloseEvent& e) {
+	bool App::on_window_close(WindowCloseEvent& event) {
 		_running = false;
 		return true;
+	}
+
+	bool App::on_window_resize(WindowResizeEvent& event)
+	{
+		uint32_t window_width = event.get_window_width(), window_height = event.get_window_height();
+		if (window_width == 0 || window_height == 0) {
+			_minimized = true;
+			return false;
+		}
+		_minimized = false;
+
+		Renderer::on_window_resize(window_width, window_height);
+
+		return false;
 	}
 
 	void App::run() {
@@ -63,13 +78,15 @@ namespace GamEngine {
 			Timestep timestep = time - _last_frame_time;
 			_last_frame_time = time;
 
-			for (Layer* layer : _layer_stack)
-				layer->on_update(timestep);
+			if (!_minimized) {
+				for (Layer* layer : _layer_stack)
+					layer->on_update(timestep);
 
-			_imgui_layer->begin();
-			for (Layer* layer : _layer_stack)
-				layer->on_imgui_render();
-			_imgui_layer->end();
+				_imgui_layer->begin();
+				for (Layer* layer : _layer_stack)
+					layer->on_imgui_render();
+				_imgui_layer->end();
+			}
 
 			_window->on_update();
 		}

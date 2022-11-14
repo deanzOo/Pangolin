@@ -49,8 +49,8 @@ namespace GamEngine {
 	}
     void ImGuiLayer::on_imgui_render()
     {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        /*static bool show = true;
+        ImGui::ShowDemoWindow(&show);*/
     }
     void ImGuiLayer::begin()
     {

@@ -9,16 +9,24 @@ namespace GamEngine {
 	{
 		_view_projection_matrix = _projection_matrix * _view_matrix;
 	}
+
+	void OrthographicCamera::set_projection(float left, float right, float bottom, float top) {
+		_projection_matrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		_view_projection_matrix = _projection_matrix * _view_matrix;
+	}
+
 	void OrthographicCamera::set_position(const glm::vec3& position)
 	{
 		_position = position;
 		recalculate_view_matrix();
 	}
+	
 	void OrthographicCamera::set_rotation(float rotation)
 	{
 		_rotation = rotation;
 		recalculate_view_matrix();
 	}
+	
 	void OrthographicCamera::recalculate_view_matrix()
 	{
 		glm::mat4 base_mtx			= glm::mat4(1.0f);
