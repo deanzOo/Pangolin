@@ -29,13 +29,13 @@ namespace Pangolin {
 		m_data.width = props.m_width;
 		m_data.height = props.m_height;
 
-		GE_CORE_INFO("Creating window {0} ({1}, {2})", props.m_title, props.m_width, props.m_height);
+		PL_CORE_INFO("Creating window {0} ({1}, {2})", props.m_title, props.m_width, props.m_height);
 		
 		if (!GLFWInitialized) {
 			int success = glfwInit();
-			GE_CORE_ASSERT(success, "Could not initialize GLFW!");
+			PL_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback([](int error_code, const char* description) {
-				GE_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
+				PL_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
 			});
 			GLFWInitialized = true;
 		}

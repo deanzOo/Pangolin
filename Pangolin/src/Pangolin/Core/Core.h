@@ -4,8 +4,8 @@
 
 #ifdef _WIN32
 	#ifdef _WIN64
-		#ifndef GE_PLATFORM_WINDOWS
-			#define GE_PLATFORM_WINDOWS
+		#ifndef PL_PLATFORM_WINDOWS
+			#define PL_PLATFORM_WINDOWS
 		#endif
 	#else
 		#error "x86 Builds are not supported!"
@@ -15,53 +15,53 @@
 	#if TARGET_IPHONE_SIMULATOR == 1
 		#error "IOS simulator is not supported!"
 	#elif TARGET_OS_IPHONE == 1
-		#define GE_PLATFORM_IOS
+		#define PL_PLATFORM_IOS
 		#error "IOS is not supported!"
 	#elif TARGET_OS_MAC == 1
-		#define GE_PLATFORM_MACOS
+		#define PL_PLATFORM_MACOS
 		#error "MacOS is not supported!"
 	#else
 		#error "Unknown Apple platform!"
 	#endif
 #elif defined(__ANDROID__)
-	#define GE_PLATFORM_ANDROID
+	#define PL_PLATFORM_ANDROID
 	#error "Android is not supported!"
 #elif defined(__linux__)
-	#define GE_PLATFORM_LINUX
+	#define PL_PLATFORM_LINUX
 	#error "Linux is not supported!"
 #else
 	#error "Unknown platform!"
 #endif
 
-#ifdef GE_PLATFORM_WINDOWS
-	#if GE_DYNAMIC_LINK
-		#ifdef GE_BUILD_DLL
+#ifdef PL_PLATFORM_WINDOWS
+	#if PL_DYNAMIC_LINK
+		#ifdef PL_BUILD_DLL
 			#define Pangolin_API __declspec(dllexport)
 		#else
 			#define Pangolin_API __declspec(dllimport)
 		#endif
 	#else
-		#define GE_API
+		#define PL_API
 	#endif
 #else
 	#error Pangolin only supports Windows!
 #endif
 
-#ifdef GE_DEBUG
-	#define GE_ENABLE_ASSERTS
+#ifdef PL_DEBUG
+	#define PL_ENABLE_ASSERTS
 #endif
 
-#ifdef GE_ENABLE_ASSERTS
-	#define GE_CORE_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed!\n\t{0}"); GE_CORE_ERROR(__VA_ARGS__); __debugbreak(); } }
-	#define GE_CLIENT_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed\n\t{0}", __VA_ARGS__); __debugbreak(); } }
+#ifdef PL_ENABLE_ASSERTS
+	#define PL_CORE_ASSERT(x, ...) { if (!(x)) { PL_CORE_ERROR("Assertion Failed!\n\t{0}"); PL_CORE_ERROR(__VA_ARGS__); __debugbreak(); } }
+	#define PL_CLIENT_ASSERT(x, ...) { if (!(x)) { PL_CORE_ERROR("Assertion Failed\n\t{0}", __VA_ARGS__); __debugbreak(); } }
 #else
-	#define GE_CORE_ASSERT(x, ...)  {}
-	#define GE_CLIENT_ASSERT(x, ...) {}
+	#define PL_CORE_ASSERT(x, ...)  {}
+	#define PL_CLIENT_ASSERT(x, ...) {}
 #endif
 
 #define BIT(x) (1 << x)
 
-#define GE_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+#define PL_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
 
 namespace Pangolin {
 	template<typename T>

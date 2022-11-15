@@ -15,6 +15,6 @@
 
 #include "Pangolin/Core/Log/Log.h"
 
-#ifdef GE_PLATFORM_WINDOWS
+#ifdef PL_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

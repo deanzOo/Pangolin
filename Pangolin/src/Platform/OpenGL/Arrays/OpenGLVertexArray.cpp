@@ -20,7 +20,7 @@ namespace Pangolin {
 			case ShaderDataType::Bool: return GL_BOOL;
 		}
 
-		GE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		PL_CORE_ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -40,7 +40,7 @@ namespace Pangolin {
 
 	void OpenGLVertexArray::add_vertex_buffer(const Ref<VertexBuffer>& vertex_buffer)
 	{
-		GE_CORE_ASSERT(vertex_buffer->get_layout().get_elements().size(), "Vertex buffer has no layout!");
+		PL_CORE_ASSERT(vertex_buffer->get_layout().get_elements().size(), "Vertex buffer has no layout!");
 		
 		bind();
 		vertex_buffer->bind();

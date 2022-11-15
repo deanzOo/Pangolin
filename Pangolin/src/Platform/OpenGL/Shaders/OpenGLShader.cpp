@@ -13,7 +13,7 @@ namespace Pangolin {
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		else if(type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
 
-		GE_CORE_ASSERT(false, "Unkown shader type ({0})", type);
+		PL_CORE_ASSERT(false, "Unkown shader type ({0})", type);
 		return 0;
 	}
 
@@ -21,7 +21,7 @@ namespace Pangolin {
 		std::unordered_map<GLenum, ShaderComponents> sources = load_from_path(path);
 
 		GLuint program = glCreateProgram();
-		GE_CORE_ASSERT(sources.size() == 2, "Only support for exactly 2 shader sources currently");
+		PL_CORE_ASSERT(sources.size() == 2, "Only support for exactly 2 shader sources currently");
 		std::array<GLenum, 2> gl_shader_ids;;
 		int shader_id = 0;
 		std::string shader_name;
@@ -39,7 +39,7 @@ namespace Pangolin {
 
 			GLint is_compiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &is_compiled);
-			GE_CORE_ASSERT(is_compiled, "Shader Compilation failure!");
+			PL_CORE_ASSERT(is_compiled, "Shader Compilation failure!");
 			if (is_compiled == GL_FALSE)
 			{
 				GLint max_length = 0;
@@ -50,7 +50,7 @@ namespace Pangolin {
 
 				glDeleteShader(shader);
 
-				GE_CORE_ERROR("{0}", info_log.data());
+				PL_CORE_ERROR("{0}", info_log.data());
 
 				break;
 			}
@@ -75,7 +75,7 @@ namespace Pangolin {
 			for (auto id : gl_shader_ids)
 				glDeleteShader(id);
 
-			GE_CORE_ASSERT(is_linked, "Program Link failure! ({0})", info_log.data());
+			PL_CORE_ASSERT(is_linked, "Program Link failure! ({0})", info_log.data());
 
 			return;
 		}
@@ -153,7 +153,7 @@ namespace Pangolin {
 	{
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
-		GE_CORE_ASSERT(in, "Could not open file '{0}'", filepath);
+		PL_CORE_ASSERT(in, "Could not open file '{0}'", filepath);
 		in.seekg(0, std::ios::end);
 		result.resize(in.tellg());
 		in.seekg(0, std::ios::beg);
@@ -170,8 +170,8 @@ namespace Pangolin {
 
 			std::string filename = filepath.substr(filepath.find_last_of("/") + 1);
 
-			int format_dot_count = std::count(filename.begin(), filename.end(), '.');
-			GE_CORE_ASSERT(format_dot_count == 2, "Shader asset naming convention: '<shader_name>.<shader_type>.glsl' instead receieved '{0}'", filename);
+			uint64_t format_dot_count = std::count(filename.begin(), filename.end(), '.');
+			PL_CORE_ASSERT(format_dot_count == 2, "Shader asset naming convention: '<shader_name>.<shader_type>.glsl' instead receieved '{0}'", filename);
 
 			size_t name_end_index = filename.find_first_of(".");
 			size_t type_end_index = filename.find_last_of(".");

@@ -10,12 +10,12 @@ namespace Pangolin {
 		RendererAPI::API api = Renderer::get_api();
 		switch (api) {
 		case RendererAPI::API::None: 
-			GE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			PL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size);
 		}
 
-		GE_CORE_ASSERT(false, "Unknown RendererAPI!");
+		PL_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

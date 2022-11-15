@@ -9,7 +9,7 @@ namespace Pangolin {
 	{
 		switch (Renderer::get_api()) {
 		case RendererAPI::API::None:
-			GE_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!");
+			PL_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, size);
 		}

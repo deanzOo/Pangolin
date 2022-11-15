@@ -24,7 +24,7 @@ namespace Pangolin {
 			case ShaderDataType::Bool:		return 1;
 		}
 
-		GE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		PL_CORE_ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	};
 
@@ -60,7 +60,7 @@ namespace Pangolin {
 				case ShaderDataType::Bool:		return 1;
 			}
 
-			GE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+			PL_CORE_ASSERT(false, "Unknown ShaderDataType!");
 			return 0;
 		}
 

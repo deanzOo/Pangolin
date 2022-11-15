@@ -8,11 +8,11 @@ namespace Pangolin {
 
 	App::App()
 	{
-		GE_CORE_ASSERT(!instance, "App already exists!");
+		PL_CORE_ASSERT(!instance, "App already exists!");
 		instance = this;
 
 		_window = Scope<Window>(Window::create());
-		_window->set_event_callback(GE_BIND_EVENT_FN(App::on_event));
+		_window->set_event_callback(PL_BIND_EVENT_FN(App::on_event));
 
 		_time = Scope<Time>(Time::create());
 
@@ -29,8 +29,8 @@ namespace Pangolin {
 	void App::on_event(Event& e) {
 		EventDispatcher dispatcher(e);
 
-		dispatcher.dispatch<WindowCloseEvent>(GE_BIND_EVENT_FN(App::on_window_close));
-		dispatcher.dispatch<WindowResizeEvent>(GE_BIND_EVENT_FN(App::on_window_resize));
+		dispatcher.dispatch<WindowCloseEvent>(PL_BIND_EVENT_FN(App::on_window_close));
+		dispatcher.dispatch<WindowResizeEvent>(PL_BIND_EVENT_FN(App::on_window_resize));
 
 		for (auto it = _layer_stack.end(); it != _layer_stack.begin(); ) {
 			(*--it)->on_event(e);

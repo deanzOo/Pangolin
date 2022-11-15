@@ -5,7 +5,7 @@ namespace Pangolin {
     void ShaderLibrary::add(const Ref<Shader>& shader)
     {
         auto& name = shader->get_name();
-        GE_CORE_ASSERT(!exists(name), "Shader already exists!");
+        PL_CORE_ASSERT(!exists(name), "Shader already exists!");
         _shaders[name] = shader;
     }
 
@@ -19,7 +19,7 @@ namespace Pangolin {
 
     Ref<Shader> ShaderLibrary::get(const std::string& name)
     {
-        GE_CORE_ASSERT(exists(name), "Shader not found!");
+        PL_CORE_ASSERT(exists(name), "Shader not found!");
         return _shaders[name];
     }
 

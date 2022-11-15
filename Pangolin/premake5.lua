@@ -42,7 +42,7 @@ project "Pangolin"
     }
 
     filter "configurations:Debug"
-        defines "GE_DEBUG"
+        defines "PL_DEBUG"
         runtime "Debug"
         symbols "on"
 

@@ -12,7 +12,7 @@ namespace Pangolin {
 
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* image_data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		GE_CORE_ASSERT(image_data, "Failed to load image!");
+		PL_CORE_ASSERT(image_data, "Failed to load image!");
 
 		_width = width;
 		_height = height;
@@ -27,7 +27,7 @@ namespace Pangolin {
 			data_format = GL_RGB;
 		}
 
-		GE_CORE_ASSERT(internal_format & data_format, "Format not supported!");
+		PL_CORE_ASSERT(internal_format & data_format, "Format not supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &_renderer_id);
 		glTextureStorage2D(_renderer_id, 1, internal_format, _width, _height);

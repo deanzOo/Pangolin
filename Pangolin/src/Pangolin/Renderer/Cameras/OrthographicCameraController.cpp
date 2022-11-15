@@ -11,13 +11,13 @@ namespace Pangolin {
 
 	void OrthographicCameraController::on_update(Timestep step)
 	{
-		if (Input::is_key_pressed(GE_KEY_W)) _camera_position.y += _camera_translation_spd * step;
-		else if (Input::is_key_pressed(GE_KEY_A)) _camera_position.x -= _camera_translation_spd * step;
-		else if (Input::is_key_pressed(GE_KEY_S)) _camera_position.y -= _camera_translation_spd * step;
-		else if (Input::is_key_pressed(GE_KEY_D)) _camera_position.x += _camera_translation_spd * step;
+		if (Input::is_key_pressed(PL_KEY_W)) _camera_position.y += _camera_translation_spd * step;
+		else if (Input::is_key_pressed(PL_KEY_A)) _camera_position.x -= _camera_translation_spd * step;
+		else if (Input::is_key_pressed(PL_KEY_S)) _camera_position.y -= _camera_translation_spd * step;
+		else if (Input::is_key_pressed(PL_KEY_D)) _camera_position.x += _camera_translation_spd * step;
 		if (_rotation) {
-			if (Input::is_key_pressed(GE_KEY_E)) _camera_rotation += _camera_rotation_spd * step;
-			else if (Input::is_key_pressed(GE_KEY_Q)) _camera_rotation -= _camera_rotation_spd * step;
+			if (Input::is_key_pressed(PL_KEY_E)) _camera_rotation += _camera_rotation_spd * step;
+			else if (Input::is_key_pressed(PL_KEY_Q)) _camera_rotation -= _camera_rotation_spd * step;
 			_camera.set_rotation(_camera_rotation);
 		}
 
@@ -28,8 +28,8 @@ namespace Pangolin {
 	void OrthographicCameraController::on_event(Event& event)
 	{
 		EventDispatcher dispatcher(event);
-		dispatcher.dispatch<MouseScrolledEvent>(GE_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
-		dispatcher.dispatch<WindowResizeEvent>(GE_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
+		dispatcher.dispatch<MouseScrolledEvent>(PL_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
+		dispatcher.dispatch<WindowResizeEvent>(PL_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
 	}
 
 	bool OrthographicCameraController::on_mouse_scrolled(MouseScrolledEvent& event)
