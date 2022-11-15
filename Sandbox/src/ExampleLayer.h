@@ -1,32 +1,32 @@
 #pragma once
 
-#include "GamEngine/Core/Layers/Layer.h"
-#include "GamEngine/Core/Time/Timestep.h"
-#include <GamEngine/Renderer/Shaders/Shader.h>
-#include <GamEngine/Renderer/Shaders/ShaderLibrary.h>
-#include <GamEngine/Renderer/Arrays/VertexArray.h>
-#include "GamEngine/Renderer/Cameras/OrthographicCamera.h"
-#include "GamEngine/Renderer/Cameras/OrthographicCameraController.h"
-#include "GamEngine/Renderer/Textures/Texture2D.h"
+#include "Pangolin/Core/Layers/Layer.h"
+#include "Pangolin/Core/Time/Timestep.h"
+#include <Pangolin/Renderer/Shaders/Shader.h>
+#include <Pangolin/Renderer/Shaders/ShaderLibrary.h>
+#include <Pangolin/Renderer/Arrays/VertexArray.h>
+#include "Pangolin/Renderer/Cameras/OrthographicCamera.h"
+#include "Pangolin/Renderer/Cameras/OrthographicCameraController.h"
+#include "Pangolin/Renderer/Textures/Texture2D.h"
 
-class ExampleLayer : public GamEngine::Layer {
+class ExampleLayer : public Pangolin::Layer {
 public:
 	ExampleLayer();
 
-	virtual void on_update(GamEngine::Timestep step) override;
+	virtual void on_update(Pangolin::Timestep step) override;
 	virtual void on_imgui_render() override;
-	void on_event(GamEngine::Event& event) override;
+	void on_event(Pangolin::Event& event) override;
 
 private:
-	GamEngine::ShaderLibrary _shader_library;
+	Pangolin::ShaderLibrary _shader_library;
 
-	GamEngine::Ref<GamEngine::Texture2D> _texture;
+	Pangolin::Ref<Pangolin::Texture2D> _texture;
 
-	GamEngine::Ref<GamEngine::VertexArray> _square_vertex_array;
-	GamEngine::Ref<GamEngine::VertexBuffer> _square_vertex_buffer;
-	GamEngine::Ref<GamEngine::IndexBuffer> _square_index_buffer;
+	Pangolin::Ref<Pangolin::VertexArray> _square_vertex_array;
+	Pangolin::Ref<Pangolin::VertexBuffer> _square_vertex_buffer;
+	Pangolin::Ref<Pangolin::IndexBuffer> _square_index_buffer;
 	float _square_move_spd = 2.0f;
 	glm::vec3 _square_color = { 0.2f, 0.3f, 0.8f };
 
-	GamEngine::OrthographicCameraController _camera_controller;
+	Pangolin::OrthographicCameraController _camera_controller;
 };

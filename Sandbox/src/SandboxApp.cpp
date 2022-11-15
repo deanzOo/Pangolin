@@ -1,13 +1,13 @@
-#include "GamEngine.h"
+#include "Pangolin.h"
 #include "ExampleLayer.h"
 
-class Sandbox : public GamEngine::App {
+class Sandbox : public Pangolin::App {
 public:
 	Sandbox() {
 		push_layer(new ExampleLayer());
 	}
 };
 
-GamEngine::App* GamEngine::create_app() {
+Pangolin::App* Pangolin::create_app() {
 	return new Sandbox();
 }

@@ -15,13 +15,13 @@ project "Sandbox"
     }
 
     includedirs {
-        "%{wks.location}/GamEngine/lib/spdlog/include",
-        "%{wks.location}/GamEngine/src",
-        "%{wks.location}/GamEngine/lib",
+        "%{wks.location}/Pangolin/lib/spdlog/include",
+        "%{wks.location}/Pangolin/src",
+        "%{wks.location}/Pangolin/lib",
 		"%{include_dirs.glm}"
     }
 
-    links { "GamEngine" }
+    links { "Pangolin" }
     
     filter "system:Windows"
         defines "GE_PLATFORM_WINDOWS"
