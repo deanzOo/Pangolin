@@ -39,7 +39,7 @@ ExampleLayer::ExampleLayer()
 	auto flat_color_shader = _shader_library.load("assets/shaders/flat_color/");
 	auto texture_shader = _shader_library.load("assets/shaders/texture/");
 
-	_texture = Pangolin::Texture2D::create("assets/textures/example.png");
+	_texture = Pangolin::Texture2D::create("assets/textures/PL.png");
 
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(texture_shader)->bind();
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(texture_shader)->upload_uniform_int("u_texture", 0);
@@ -69,12 +69,11 @@ void ExampleLayer::on_update(Pangolin::Timestep step)
 		}
 	}
 
+	//Pangolin::Renderer::submit(flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 	auto texture_shader = _shader_library.get("texture");
-
-	Pangolin::Renderer::submit(flat_color_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-
 	_texture->bind();
-	Pangolin::Renderer::submit(texture_shader, _square_vertex_array, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	Pangolin::Renderer::submit(texture_shader, _square_vertex_array, glm::translate(glm::mat4(1.0f), _square_pos) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 	Pangolin::Renderer::end_scene();
 }
@@ -84,6 +83,9 @@ void ExampleLayer::on_imgui_render()
 	ImGui::Begin("Settings");
 
 	ImGui::ColorEdit3("Square Color", glm::value_ptr(_square_color));
+	float pos[3] = { _square_pos.x, _square_pos.y, _square_pos.z };
+	ImGui::InputFloat3("Square Pos", pos, NULL, NULL);
+	_square_pos = { pos[0], pos[1], pos[2] };
 
 	ImGui::End();
 }

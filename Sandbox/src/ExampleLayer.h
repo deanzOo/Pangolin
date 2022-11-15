@@ -25,7 +25,7 @@ private:
 	Pangolin::Ref<Pangolin::VertexArray> _square_vertex_array;
 	Pangolin::Ref<Pangolin::VertexBuffer> _square_vertex_buffer;
 	Pangolin::Ref<Pangolin::IndexBuffer> _square_index_buffer;
-	float _square_move_spd = 2.0f;
+	glm::vec3 _square_pos = { 0.0f, 0.0f, 0.0f };
 	glm::vec3 _square_color = { 0.2f, 0.3f, 0.8f };
 
 	Pangolin::OrthographicCameraController _camera_controller;
