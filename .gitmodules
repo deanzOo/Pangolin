@@ -11,3 +11,15 @@
 [submodule "GamEngine\\lib\\ImGui"]
 	path = GamEngine\\lib\\ImGui
 	url = git@github.com:deanzOo/imgui.git
+[submodule "Pangolin/lib/ImGui"]
+	path = Pangolin/lib/ImGui
+	url = git@github.com:deanzOo/imgui.git
+[submodule "Pangolin/lib/GLFW"]
+	path = Pangolin/lib/GLFW
+	url = git@github.com:deanzOo/glfw.git
+[submodule "Pangolin/lib/glm"]
+	path = Pangolin/lib/glm
+	url = git@github.com:deanzOo/glm.git
+[submodule "Pangolin/lib/spdlog"]
+	path = Pangolin/lib/spdlog
+	url = https://github.com/gabime/spdlog.git

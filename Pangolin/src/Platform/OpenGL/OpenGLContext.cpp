@@ -16,9 +16,9 @@ namespace Pangolin {
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		GE_CORE_ASSERT(status, "Failed to initialize OpenGL context!");
 		GE_CORE_INFO("OpenGL Info:");
-		GE_CORE_INFO("    Vendor: {0}", glGetString(GL_VENDOR));
-		GE_CORE_INFO("    Renderer: {0}", glGetString(GL_RENDERER));
-		GE_CORE_INFO("    Version: {0}.{1}", GLVersion.major, GLVersion.minor);
+		GE_CORE_INFO("    Vendor: {0}", (void*)glGetString(GL_VENDOR));
+		GE_CORE_INFO("    Renderer: {0}", (void*)glGetString(GL_RENDERER));
+		GE_CORE_INFO("    Version: {0}.{1}", (void*)GLVersion.major, GLVersion.minor);
 
 		#ifdef GE_ENABLE_ASSERTS
 			int version_major, version_minor;

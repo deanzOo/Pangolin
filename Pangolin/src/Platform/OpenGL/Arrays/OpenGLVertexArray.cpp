@@ -55,7 +55,7 @@ namespace Pangolin {
 				ShaderDataTypeToGLBaseType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				layout.get_stride(),
-				(const void*)element.offset
+				(const void*)(size_t)element.offset
 			);
 		}
 		_vertex_buffers.push_back(vertex_buffer);

@@ -4,7 +4,9 @@
 
 #ifdef _WIN32
 	#ifdef _WIN64
-		#define GE_PLATFORM_WINDOWS
+		#ifndef GE_PLATFORM_WINDOWS
+			#define GE_PLATFORM_WINDOWS
+		#endif
 	#else
 		#error "x86 Builds are not supported!"
 	#endif
@@ -50,8 +52,8 @@
 #endif
 
 #ifdef GE_ENABLE_ASSERTS
-	#define GE_CORE_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed!"); GE_CORE_ERROR(__VA_ARGS__); __debugbreak(); } }
-	#define GE_CLIENT_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define GE_CORE_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed!\n\t{0}"); GE_CORE_ERROR(__VA_ARGS__); __debugbreak(); } }
+	#define GE_CLIENT_ASSERT(x, ...) { if (!(x)) { GE_CORE_ERROR("Assertion Failed\n\t{0}", __VA_ARGS__); __debugbreak(); } }
 #else
 	#define GE_CORE_ASSERT(x, ...)  {}
 	#define GE_CLIENT_ASSERT(x, ...) {}
