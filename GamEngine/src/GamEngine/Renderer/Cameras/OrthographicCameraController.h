@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OrthographicCamera.h"
-#include "GamEngine/Core/Timestep.h"
+#include "GamEngine/Core/Time/Timestep.h"
 
 #include "GamEngine/Events/AppEvent.h"
 #include "GamEngine/Events/MouseEvent.h"

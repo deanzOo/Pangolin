@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core.h"
+#include "GamEngine/Core/Core.h"
 
-#include "Window.h"
-#include "LayerStack.h"
+#include "GamEngine/Core/Window.h"
+#include "GamEngine/Core/Layers/LayerStack.h"
 #include "GamEngine/Events/Event.h"
 #include "GamEngine/Events/AppEvent.h"
-#include "GamEngine/Core/Time.h"
-#include "GamEngine/Core/Timestep.h"
+#include "GamEngine/Core/Time/Time.h"
+#include "GamEngine/Core/Time/Timestep.h"
 
 #include "GamEngine/ImGui/ImGuiLayer.h"
 

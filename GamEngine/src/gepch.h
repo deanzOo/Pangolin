@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "GamEngine/Core/Log.h"
+#include "GamEngine/Core/Log/Log.h"
 
 #ifdef GE_PLATFORM_WINDOWS
 	#include <Windows.h>

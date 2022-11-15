@@ -1,9 +1,9 @@
 #include "ExampleLayer.h"
 #include "Platform/OpenGL/Shaders/OpenGLShader.h"
 #include <GamEngine/Renderer/Renderer.h>
-#include <GamEngine/Core/KeyCodes.h>
+#include <GamEngine/Core/Input/Input.h>
+#include <GamEngine/Core/Input/KeyCodes.h>
 #include <GamEngine/Events/Event.h>
-#include <GamEngine/Core/Input.h>
 #include "glm/gtc/matrix_transform.hpp"
 #include "ImGui/imgui.h"
 #include "glm/gtc/type_ptr.hpp"

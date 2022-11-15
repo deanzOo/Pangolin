@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GamEngine/Core/Core.h"
-#include "GamEngine/Core/Timestep.h"
+#include "GamEngine/Core/Time/Timestep.h"
 #include "GamEngine/Events/Event.h"
 #include "GamEngine/Events/MouseEvent.h"
 #include "GamEngine/Events/KeyEvent.h"

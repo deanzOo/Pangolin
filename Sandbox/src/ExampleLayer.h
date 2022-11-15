@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GamEngine/Core/Layer.h"
-#include "GamEngine/Core/Timestep.h"
+#include "GamEngine/Core/Layers/Layer.h"
+#include "GamEngine/Core/Time/Timestep.h"
 #include <GamEngine/Renderer/Shaders/Shader.h>
 #include <GamEngine/Renderer/Shaders/ShaderLibrary.h>
 #include <GamEngine/Renderer/Arrays/VertexArray.h>

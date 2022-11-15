@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GamEngine/Core/Time.h"
+#include "GamEngine/Core/Time/Time.h"
 
 struct GLFWwindow;
 
