@@ -18,6 +18,7 @@
 #include "Pangolin/Renderer/RenderCommand.h"
 
 #include "Pangolin/Renderer/Shaders/Shader.h"
+#include "Pangolin/Renderer/Shaders/ShaderLibrary.h"
 
 #include "Pangolin/Renderer/Textures/Texture.h"
 #include "Pangolin/Renderer/Textures/Texture2D.h"
