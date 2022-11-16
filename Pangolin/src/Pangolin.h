@@ -20,6 +20,7 @@
 #include "Pangolin/Renderer/Shaders/Shader.h"
 
 #include "Pangolin/Renderer/Textures/Texture.h"
+#include "Pangolin/Renderer/Textures/Texture2D.h"
 
 #include "Pangolin/Renderer/Buffers/IndexBuffer.h"
 #include "Pangolin/Renderer/Buffers/VertexBuffer.h"
@@ -29,5 +30,3 @@
 
 #include "Pangolin/Renderer/Cameras/OrthographicCamera.h"
 #include "Pangolin/Renderer/Cameras/OrthographicCameraController.h"
-
-#include "Pangolin/Core/Entry.h"

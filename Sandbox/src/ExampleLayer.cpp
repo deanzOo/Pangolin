@@ -11,7 +11,7 @@
 ExampleLayer::ExampleLayer() 
 	: Layer("Exmaple"), _camera_controller(1280.0f / 720.0f, true)
 {
-	_square_vertex_array.reset(Pangolin::VertexArray::create());
+	_square_vertex_array = Pangolin::VertexArray::create();
 
 	float square_vertices[5 * 4] = {
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -19,7 +19,7 @@ ExampleLayer::ExampleLayer()
 		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
 		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 	};
-	_square_vertex_buffer.reset(Pangolin::VertexBuffer::create(square_vertices, sizeof(square_vertices)));
+	_square_vertex_buffer = Pangolin::VertexBuffer::create(square_vertices, sizeof(square_vertices));
 
 	{
 		Pangolin::BufferLayout square_layout = {
@@ -31,7 +31,7 @@ ExampleLayer::ExampleLayer()
 	_square_vertex_array->add_vertex_buffer(_square_vertex_buffer);
 
 	uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
-	_square_index_buffer.reset(Pangolin::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t)));
+	_square_index_buffer = Pangolin::IndexBuffer::create(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t));
 	_square_vertex_array->set_index_buffer(_square_index_buffer);
 
 	_square_vertex_array->unbind();
