@@ -45,7 +45,7 @@ void TilemapLayer::on_update(Pangolin::Timestep step)
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_flat_color_shader)->bind();
-	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
+	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_flat_color_shader)->opengl_set_uniform_float3("u_color", _square_color);
 
 	for (int y = 10; y < 30; y++) {
 		for (int x = 10; x < 30; x++) {

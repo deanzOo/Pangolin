@@ -20,5 +20,5 @@ private:
 	Pangolin::Ref<Pangolin::IndexBuffer> _square_index_buffer;
 	Pangolin::Ref<Pangolin::Shader> _flat_color_shader;
 	glm::vec3 _square_pos = { 0.0f, 0.0f, 0.0f };
-	glm::vec3 _square_color = { 0.2f, 0.3f, 0.8f };
+	glm::vec4 _square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

@@ -36,7 +36,7 @@ TextureLayer::TextureLayer()
 	_texture = Pangolin::Texture2D::create("assets/textures/PL.png");
 
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_texture_shader)->bind();
-	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_texture_shader)->upload_uniform_int("u_texture", 0);
+	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_texture_shader)->opengl_set_uniform_int("u_texture", 0);
 }
 
 void TextureLayer::on_update(Pangolin::Timestep step)
