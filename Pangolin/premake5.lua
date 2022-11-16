@@ -8,8 +8,8 @@ project "Pangolin"
     targetdir ("%{wks.location}/bin/" .. output_dir .. "/%{prj.name}")
     objdir ("%{wks.location}/int/" .. output_dir .. "/%{prj.name}")
 
-    pchheader "gepch.h"
-    pchsource "src/gepch.cpp"
+    pchheader "plpch.h"
+    pchsource "src/plpch.cpp"
 
     files {
         "src/**.h",

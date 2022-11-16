@@ -9,8 +9,8 @@
 class Sandbox : public Pangolin::App {
 public:
 	Sandbox() {
-		//push_layer(new TilemapLayer());
-		//push_layer(new TextureLayer());
+		/*push_layer(new TilemapLayer());
+		push_layer(new TextureLayer());*/
 		push_layer(new Sandbox2D());
 	}
 };

@@ -47,8 +47,8 @@ void TilemapLayer::on_update(Pangolin::Timestep step)
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_flat_color_shader)->bind();
 	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_flat_color_shader)->upload_uniform_float3("u_color", _square_color);
 
-	for (int y = 0; y < 20; y++) {
-		for (int x = 0; x < 20; x++) {
+	for (int y = 10; y < 30; y++) {
+		for (int x = 10; x < 30; x++) {
 			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 			Pangolin::Renderer::submit(_flat_color_shader, _square_vertex_array, transform);

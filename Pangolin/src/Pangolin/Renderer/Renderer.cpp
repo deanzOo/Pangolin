@@ -1,5 +1,6 @@
-#include "gepch.h"
+#include "plpch.h"
 #include "Renderer.h"
+#include "Renderer2D.h"
 #include "Platform/OpenGL/Shaders/OpenGLShader.h"
 
 namespace Pangolin {
@@ -8,6 +9,7 @@ namespace Pangolin {
 
 	void Renderer::init() {
 		RenderCommand::init();
+		Renderer2D::init();
 	}
 
 	void Renderer::on_window_resize(uint32_t width, uint32_t height) {

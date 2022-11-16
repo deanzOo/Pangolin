@@ -43,9 +43,6 @@ void TextureLayer::on_update(Pangolin::Timestep step)
 {
 	_camera_controller.on_update(step);
 
-	Pangolin::RenderCommand::set_clear_color({ 0.1f, 0.1f, 0.1f, 1.0f });
-	Pangolin::RenderCommand::clear();
-
 	Pangolin::Renderer::begin_scene(_camera_controller.get_camera());
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));

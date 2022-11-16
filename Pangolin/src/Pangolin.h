@@ -15,6 +15,7 @@
 #include "Pangolin/ImGui/ImGuiLayer.h"
 
 #include "Pangolin/Renderer/Renderer.h"
+#include "Pangolin/Renderer/Renderer2D.h"
 #include "Pangolin/Renderer/RenderCommand.h"
 
 #include "Pangolin/Renderer/Shaders/Shader.h"
