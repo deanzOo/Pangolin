@@ -11,7 +11,7 @@ namespace Pangolin {
 		case RendererAPI::API::None:
 			PL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(path);
+		case RendererAPI::API::OpenGL: return create_ref<OpenGLShader>(path);
 		}
 
 		return nullptr;
@@ -23,7 +23,7 @@ namespace Pangolin {
 		case RendererAPI::API::None:
 			PL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, path);
+		case RendererAPI::API::OpenGL: return create_ref<OpenGLShader>(name, path);
 		}
 
 		return nullptr;

@@ -2,7 +2,6 @@
 #include "Sandbox2D.h"
 #include "ImGui/imgui.h"
 #include "glm/gtc/type_ptr.hpp"
-#include "Platform/OpenGL/Shaders/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D(): Pangolin::Layer("Sandbox2D"), _camera_controller(1280.0f / 720.0f, true)
 {
@@ -10,6 +9,7 @@ Sandbox2D::Sandbox2D(): Pangolin::Layer("Sandbox2D"), _camera_controller(1280.0f
 
 void Sandbox2D::on_attach()
 {
+	_texture = Pangolin::Texture2D::create("assets/textures/PL.png");
 }
 
 void Sandbox2D::on_detach()
@@ -26,6 +26,7 @@ void Sandbox2D::on_update(Pangolin::Timestep step)
 	Pangolin::Renderer2D::begin_scene(_camera_controller.get_camera());
 	Pangolin::Renderer2D::draw_quad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, _square_color);
 	Pangolin::Renderer2D::draw_quad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, {0.8f, 0.2f, 0.3f, 1.0f});
+	Pangolin::Renderer2D::draw_quad({ 0.0f, 0.5f, -0.1f }, { 5.0f, 5.0f }, _texture);
 	Pangolin::Renderer2D::end_scene();
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));

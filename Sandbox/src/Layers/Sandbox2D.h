@@ -15,10 +15,8 @@ public:
 private:
 	Pangolin::OrthographicCameraController _camera_controller;
 
-	Pangolin::Ref<Pangolin::VertexArray> _square_vertex_array;
-	Pangolin::Ref<Pangolin::VertexBuffer> _square_vertex_buffer;
-	Pangolin::Ref<Pangolin::IndexBuffer> _square_index_buffer;
-	Pangolin::Ref<Pangolin::Shader> _flat_color_shader;
+	Pangolin::Ref<Pangolin::Texture2D> _texture;
+
 	glm::vec3 _square_pos = { 0.0f, 0.0f, 0.0f };
 	glm::vec4 _square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

@@ -106,6 +106,11 @@ namespace Pangolin {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::set_uniform_int(const std::string& name, int value)
+	{
+		opengl_set_uniform_int(name, value);
+	}
+
 	void OpenGLShader::set_uniform_mat4(const std::string& name, const glm::mat4& matrix)
 	{
 		opengl_set_uniform_mat4(name, matrix);

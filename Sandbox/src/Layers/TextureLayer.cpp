@@ -1,5 +1,4 @@
 #include "TextureLayer.h"
-#include "Platform/OpenGL/Shaders/OpenGLShader.h"
 #include "ImGui/imgui.h"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -35,8 +34,8 @@ TextureLayer::TextureLayer()
 
 	_texture = Pangolin::Texture2D::create("assets/textures/PL.png");
 
-	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_texture_shader)->bind();
-	std::dynamic_pointer_cast<Pangolin::OpenGLShader>(_texture_shader)->opengl_set_uniform_int("u_texture", 0);
+	_texture_shader->bind();
+	_texture_shader->set_uniform_int("u_texture", 0);
 }
 
 void TextureLayer::on_update(Pangolin::Timestep step)

@@ -11,7 +11,7 @@ namespace Pangolin {
 		case RendererAPI::API::None:
 			PL_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
+		case RendererAPI::API::OpenGL: return create_ref<OpenGLVertexArray>();
 		}
 
 		return nullptr;
