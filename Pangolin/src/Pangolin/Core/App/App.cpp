@@ -8,6 +8,8 @@ namespace Pangolin {
 
 	App::App()
 	{
+		PL_PROFILE_FUNCTION();
+		
 		PL_CORE_ASSERT(!instance, "App already exists!");
 		instance = this;
 
@@ -24,9 +26,14 @@ namespace Pangolin {
 
 	App::~App()
 	{
+		PL_PROFILE_FUNCTION();
+		
+		Renderer::shutdown();
 	}
 
 	void App::on_event(Event& e) {
+		PL_PROFILE_FUNCTION();
+		
 		EventDispatcher dispatcher(e);
 
 		dispatcher.dispatch<WindowCloseEvent>(PL_BIND_EVENT_FN(App::on_window_close));
@@ -41,12 +48,16 @@ namespace Pangolin {
 
 	void App::push_layer(Layer* layer)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_layer_stack.push_layer(layer);
 		layer->on_attach();
 	}
 
 	void App::push_overlay(Layer* layer)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_layer_stack.push_overlay(layer);
 		layer->on_attach(); 
 	}
@@ -58,6 +69,8 @@ namespace Pangolin {
 
 	bool App::on_window_resize(WindowResizeEvent& event)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		uint32_t window_width = event.get_window_width(), window_height = event.get_window_height();
 		if (window_width == 0 || window_height == 0) {
 			_minimized = true;
@@ -71,18 +84,29 @@ namespace Pangolin {
 	}
 
 	void App::run() {
+		PL_PROFILE_FUNCTION();
+		
 		while (_running) {
+			PL_PROFILE_SCOPE("App::run-loop");
 			float time = _time->get_time();
 			Timestep timestep = time - _last_frame_time;
 			_last_frame_time = time;
 
 			if (!_minimized) {
-				for (Layer* layer : _layer_stack)
-					layer->on_update(timestep);
+				{
+					PL_PROFILE_SCOPE("App::run-layers::on_update")
+					
+					for (Layer* layer : _layer_stack)
+						layer->on_update(timestep);
+				}
 
 				_imgui_layer->begin();
-				for (Layer* layer : _layer_stack)
-					layer->on_imgui_render();
+				{
+					PL_PROFILE_SCOPE("App::run-imgui_layers::on_update")
+
+					for (Layer* layer : _layer_stack)
+						layer->on_imgui_render();
+				}
 				_imgui_layer->end();
 			}
 

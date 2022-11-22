@@ -12,8 +12,8 @@ namespace Pangolin {
 
 	static bool GLFWInitialized = false;
 
-	Window* Window::create(const WindowProps& props) {
-		return new WindowsWindow(props);
+	Scope<Window> Window::create(const WindowProps& props) {
+		return create_scope<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props) {
@@ -21,17 +21,22 @@ namespace Pangolin {
 	}
 
 	WindowsWindow::~WindowsWindow() {
+		PL_PROFILE_FUNCTION();
+		
 		shutdown();
 	}
 
 	void WindowsWindow::init(const WindowProps& props) {
-		m_data.title = props.m_title;
-		m_data.width = props.m_width;
-		m_data.height = props.m_height;
+		PL_PROFILE_FUNCTION();
 
-		PL_CORE_INFO("Creating window {0} ({1}, {2})", props.m_title, props.m_width, props.m_height);
+		_data.title = props._title;
+		_data.width = props._width;
+		_data.height = props._height;
+
+		PL_CORE_INFO("Creating window {0} ({1}, {2})", props._title, props._width, props._height);
 		
 		if (!GLFWInitialized) {
+			PL_PROFILE_SCOPE("WindowsWindow::glfwInit");
 			int success = glfwInit();
 			PL_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback([](int error_code, const char* description) {
@@ -40,15 +45,18 @@ namespace Pangolin {
 			GLFWInitialized = true;
 		}
 
-		m_window = glfwCreateWindow((int)props.m_width, (int)props.m_height, m_data.title.c_str(), nullptr, nullptr);
+		{
+			PL_PROFILE_SCOPE("WindowsWindow::glfwCreateWindow");
+			_window = glfwCreateWindow((int)props._width, (int)props._height, _data.title.c_str(), nullptr, nullptr);
+		}
 		
-		m_context = new OpenGLContext(m_window);
-		m_context->init();
+		_context = new OpenGLContext(_window);
+		_context->init();
 		
-		glfwSetWindowUserPointer(m_window, &m_data);
+		glfwSetWindowUserPointer(_window, &_data);
 		set_vsync(true);
 
-		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+		glfwSetWindowSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.width = width;
 			data.height = height;
@@ -57,14 +65,14 @@ namespace Pangolin {
 			data.event_callback(event);
 		});
 
-		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
+		glfwSetWindowCloseCallback(_window, [](GLFWwindow* window) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			WindowCloseEvent event;
 			data.event_callback(event);
 		});
 
-		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -87,14 +95,14 @@ namespace Pangolin {
 		});
 
 
-		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int codepoint) {
+		glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int codepoint) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			KeyTypedEvent event(codepoint);
 			data.event_callback(event);
 		});
 
-		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
+		glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -111,14 +119,14 @@ namespace Pangolin {
 			}
 		});
 
-		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double x_offset, double y_offset) {
+		glfwSetScrollCallback(_window, [](GLFWwindow* window, double x_offset, double y_offset) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseScrolledEvent event((float)x_offset, (float)y_offset);
 			data.event_callback(event);
 		});
 
-		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x_position, double y_position) {
+		glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double x_position, double y_position) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseMovedEvent event((float)x_position, (float)y_position);
@@ -127,21 +135,35 @@ namespace Pangolin {
 	}
 
 	void WindowsWindow::shutdown() {
-		glfwDestroyWindow(m_window);
+		PL_PROFILE_FUNCTION();
+		
+		glfwDestroyWindow(_window);
 	}
 
 	void WindowsWindow::on_update() {
-		glfwPollEvents();
-		m_context->swap_buffers();
+		PL_PROFILE_FUNCTION();
+
+		{
+			PL_PROFILE_SCOPE("WindwosWindow::on_update-glfwPollEvents");
+
+			glfwPollEvents();
+		}
+		{
+			PL_PROFILE_SCOPE("WindwosWindow::on_update-context::swap_buffers q");
+
+			_context->swap_buffers();
+		}
 	}
 
 	void WindowsWindow::set_vsync(bool enabled) {
+		PL_PROFILE_FUNCTION();
+		
 		if (enabled)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
 
-		m_data.vsync = enabled;
+		_data.vsync = enabled;
 	}
 
 }

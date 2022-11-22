@@ -23,6 +23,7 @@ namespace Pangolin {
 
 		virtual void set_uniform_int(const std::string& name, int value) override;
 		virtual void set_uniform_mat4(const std::string& name, const glm::mat4& matrix) override;
+		virtual void set_uniform_float(const std::string& name, float value) override;
 		virtual void set_uniform_float3(const std::string& name, const glm::vec3& values) override;
 		virtual void set_uniform_float4(const std::string& name, const glm::vec4& values) override;
 

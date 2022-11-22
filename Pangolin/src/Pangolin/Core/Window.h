@@ -7,11 +7,11 @@
 
 namespace Pangolin {
 	struct WindowProps {
-		std::string m_title;
-		unsigned int m_width;
-		unsigned int m_height;
+		std::string _title;
+		unsigned int _width;
+		unsigned int _height;
 
-		WindowProps(const std::string& title = "Pangolin", unsigned int width = 1280, unsigned int height = 720) : m_title(title), m_width(width), m_height(height) {}
+		WindowProps(const std::string& title = "Pangolin", unsigned int width = 1280, unsigned int height = 720) : _title(title), _width(width), _height(height) {}
 	};
 
 	class Window {
@@ -29,7 +29,7 @@ namespace Pangolin {
 		virtual void set_vsync(bool enabled) = 0;
 		virtual bool is_vsync() const = 0;
 
-		static Window* create(const WindowProps& props = WindowProps());
+		static Scope<Window> create(const WindowProps& props = WindowProps());
 		
 		virtual void* get_native_window() const = 0;
 	};

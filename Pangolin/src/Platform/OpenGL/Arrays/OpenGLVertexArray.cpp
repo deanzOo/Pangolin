@@ -25,21 +25,28 @@ namespace Pangolin {
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray() {
+		PL_PROFILE_FUNCTION();
+		
 		glCreateVertexArrays(1, &_renderer_id);
-		bind();
 	}
 	void OpenGLVertexArray::bind() const
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glBindVertexArray(_renderer_id);
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::add_vertex_buffer(const Ref<VertexBuffer>& vertex_buffer)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		PL_CORE_ASSERT(vertex_buffer->get_layout().get_elements().size(), "Vertex buffer has no layout!");
 		
 		bind();
@@ -63,6 +70,8 @@ namespace Pangolin {
 
 	void OpenGLVertexArray::set_index_buffer(const Ref<IndexBuffer>& index_buffer)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		bind();
 		index_buffer->bind();
 

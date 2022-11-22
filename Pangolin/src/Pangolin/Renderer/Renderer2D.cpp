@@ -18,6 +18,8 @@ namespace Pangolin {
 
 	void Renderer2D::init()
 	{
+		PL_PROFILE_FUNCTION();
+
 		_storage = new Renderer2DStorage();
 
 		_storage->quad_vertex_array = VertexArray::create();
@@ -54,11 +56,15 @@ namespace Pangolin {
 	
 	void Renderer2D::shutdown()
 	{
+		PL_PROFILE_FUNCTION();
+
 		delete _storage;
 	}
 	
 	void Renderer2D::begin_scene(OrthographicCamera& camera)
 	{
+		PL_PROFILE_FUNCTION();
+
 		_storage->texture_shader->bind();
 		_storage->texture_shader->set_uniform_mat4("u_view_projection", camera.get_view_projection_matrix());
 	}
@@ -75,27 +81,89 @@ namespace Pangolin {
 	
 	void Renderer2D::draw_quad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		PL_PROFILE_FUNCTION();
+
 		_storage->texture_shader->set_uniform_float4("u_color", color);
+		_storage->texture_shader->set_uniform_float("u_tile_factor", 1.0f);
 		_storage->white_texture->bind();
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+		glm::mat4 transform;
+		{
+			PL_PROFILE_SCOPE("Renderer2D::draw_quad-transform")
+			transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+		}
 		_storage->texture_shader->set_uniform_mat4("u_transform", transform);
 
 		_storage->quad_vertex_array->bind();
 		RenderCommand::draw_indexed(_storage->quad_vertex_array);
 	}
 
-	void Renderer2D::draw_quad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture)
+	void Renderer2D::draw_quad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tile_factor, const glm::vec4& tint_color)
 	{
-		draw_quad({ position.x, position.y, 0.0f }, size, texture);
+		draw_quad({ position.x, position.y, 0.0f }, size, texture, tile_factor);
 	}
 
-	void Renderer2D::draw_quad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture)
+	void Renderer2D::draw_quad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tile_factor, const glm::vec4& tint_color)
 	{
-		_storage->texture_shader->set_uniform_float4("u_color", glm::vec4(1.0f));
+		PL_PROFILE_FUNCTION();
+
+		_storage->texture_shader->set_uniform_float4("u_color", tint_color);
+		_storage->texture_shader->set_uniform_float("u_tile_factor", tile_factor);
 		texture->bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		_storage->texture_shader->set_uniform_mat4("u_transform", transform);
+
+		_storage->quad_vertex_array->bind();
+		RenderCommand::draw_indexed(_storage->quad_vertex_array);
+	}
+	
+	void Renderer2D::draw_rotated_quad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		draw_rotated_quad({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+	
+	void Renderer2D::draw_rotated_quad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		PL_PROFILE_FUNCTION();
+
+		_storage->texture_shader->set_uniform_float4("u_color", color);
+		_storage->texture_shader->set_uniform_float("u_tile_factor", 1.0f);
+		_storage->white_texture->bind();
+
+		glm::mat4 transform;
+		{
+			PL_PROFILE_SCOPE("Renderer2D::draw_quad_color-transform")
+				transform = glm::translate(glm::mat4(1.0), position) 
+				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+				* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		}
+		_storage->texture_shader->set_uniform_mat4("u_transform", transform);
+
+		_storage->quad_vertex_array->bind();
+		RenderCommand::draw_indexed(_storage->quad_vertex_array);
+	}
+	
+	void Renderer2D::draw_rotated_quad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tile_factor, const glm::vec4& tint_color)
+	{
+		draw_rotated_quad({ position.x, position.y, 0.0f }, size, rotation, texture, tile_factor);
+	}
+	
+	void Renderer2D::draw_rotated_quad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tile_factor, const glm::vec4& tint_color)
+	{
+		PL_PROFILE_FUNCTION();
+
+		_storage->texture_shader->set_uniform_float4("u_color", tint_color);
+		_storage->texture_shader->set_uniform_float("u_tile_factor", tile_factor);
+		texture->bind();
+
+		glm::mat4 transform;
+		{
+			PL_PROFILE_SCOPE("Renderer2D::draw_quad_texture-transform")
+				transform = glm::translate(glm::mat4(1.0), position)
+				* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+				* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		}
 		_storage->texture_shader->set_uniform_mat4("u_transform", transform);
 
 		_storage->quad_vertex_array->bind();

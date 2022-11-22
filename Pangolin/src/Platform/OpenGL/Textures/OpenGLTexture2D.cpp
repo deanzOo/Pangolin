@@ -6,10 +6,17 @@
 namespace Pangolin {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path): _path(path)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		int width, height, channels;
 
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* image_data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
+		stbi_uc* image_data = nullptr;
+		{
+			PL_PROFILE_SCOPE("OpenGLTexture2D::OpenGLTexture2D(const std::string& path) - stbi_load")
+			image_data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		}
 		PL_CORE_ASSERT(image_data, "Failed to load image!");
 
 		_width = width;
@@ -44,6 +51,8 @@ namespace Pangolin {
 	
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height) : _width(width), _height(height)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_internal_format = GL_RGBA8;
 		_data_format = GL_RGBA;
 
@@ -59,11 +68,15 @@ namespace Pangolin {
 	
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glDeleteTextures(1, &_renderer_id);
 	}
 
 	void OpenGLTexture2D::set_data(void* data, uint32_t size)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		uint32_t bytes_per_pixel = _data_format == GL_RGBA ? 4 : 3;
 		PL_CORE_ASSERT(size == _width * _height * bytes_per_pixel, "Data has to be the size of the entire Texture");
 		glTextureSubImage2D(_renderer_id, 0, 0, 0, _width, _height, _data_format, GL_UNSIGNED_BYTE, data);
@@ -71,6 +84,8 @@ namespace Pangolin {
 	
 	void OpenGLTexture2D::bind(uint32_t slot) const
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glBindTextureUnit(slot, _renderer_id);
 	}
 }

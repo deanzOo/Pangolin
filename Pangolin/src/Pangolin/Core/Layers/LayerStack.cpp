@@ -25,6 +25,7 @@ namespace Pangolin {
 	{
 		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
 		if (it != m_layers.end()) {
+			layer->on_detach();
 			m_layers.erase(it);
 			m_layer_insert_index--;
 		}
@@ -33,7 +34,9 @@ namespace Pangolin {
 	void Pangolin::LayerStack::pop_overlay(Layer* overlay)
 	{
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-		if (it != m_layers.end())
+		if (it != m_layers.end()) {
+			overlay->on_detach();
 			m_layers.erase(it);
+		}
 	}
 }

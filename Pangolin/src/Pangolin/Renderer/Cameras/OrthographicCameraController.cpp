@@ -11,6 +11,8 @@ namespace Pangolin {
 
 	void OrthographicCameraController::on_update(Timestep step)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		if (Input::is_key_pressed(PL_KEY_W)) _camera_position.y += _camera_translation_spd * step;
 		else if (Input::is_key_pressed(PL_KEY_A)) _camera_position.x -= _camera_translation_spd * step;
 		else if (Input::is_key_pressed(PL_KEY_S)) _camera_position.y -= _camera_translation_spd * step;
@@ -27,6 +29,8 @@ namespace Pangolin {
 
 	void OrthographicCameraController::on_event(Event& event)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		EventDispatcher dispatcher(event);
 		dispatcher.dispatch<MouseScrolledEvent>(PL_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
 		dispatcher.dispatch<WindowResizeEvent>(PL_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
@@ -34,6 +38,8 @@ namespace Pangolin {
 
 	bool OrthographicCameraController::on_mouse_scrolled(MouseScrolledEvent& event)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_zoom -= event.get_y_offset() * 0.25f;
 		_zoom = std::max(_zoom, 0.25f);
 		_camera.set_projection(-_aspect_ratio * _zoom, _aspect_ratio * _zoom, -_zoom, _zoom);
@@ -43,6 +49,8 @@ namespace Pangolin {
 
 	bool OrthographicCameraController::on_window_resized(WindowResizeEvent& event)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_aspect_ratio = (float)event.get_window_width() / (float)event.get_window_height();
 		_camera.set_projection(-_aspect_ratio * _zoom, _aspect_ratio * _zoom, -_zoom, _zoom);
 

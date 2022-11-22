@@ -15,6 +15,8 @@
 
 #include "Pangolin/Core/Log/Log.h"
 
+#include "Pangolin/Debug/Instrumentor.h"
+
 #ifdef PL_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

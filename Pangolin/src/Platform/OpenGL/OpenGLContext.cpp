@@ -11,6 +11,8 @@ namespace Pangolin {
 	
 	void OpenGLContext::init()
 	{
+		PL_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_handle);
 
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -34,6 +36,8 @@ namespace Pangolin {
 
 	void OpenGLContext::swap_buffers()
 	{
+		PL_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_handle);
 	}
 }

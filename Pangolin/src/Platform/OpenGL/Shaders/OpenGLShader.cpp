@@ -18,6 +18,8 @@ namespace Pangolin {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& path) {
+		PL_PROFILE_FUNCTION();
+		
 		std::unordered_map<GLenum, ShaderComponents> sources = load_from_path(path);
 
 		GLuint program = glCreateProgram();
@@ -88,21 +90,29 @@ namespace Pangolin {
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& path): OpenGLShader(path)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		_name = name;
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glDeleteProgram(_renderer_id);
 	}
 
 	void OpenGLShader::bind() const
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glUseProgram(_renderer_id);
 	}
 
 	void OpenGLShader::unbind() const
 	{
+		PL_PROFILE_FUNCTION();
+		
 		glUseProgram(0);
 	}
 
@@ -114,6 +124,11 @@ namespace Pangolin {
 	void OpenGLShader::set_uniform_mat4(const std::string& name, const glm::mat4& matrix)
 	{
 		opengl_set_uniform_mat4(name, matrix);
+	}
+
+	void OpenGLShader::set_uniform_float(const std::string& name, float value)
+	{
+		opengl_set_uniform_float(name, value);
 	}
 
 	void OpenGLShader::set_uniform_float3(const std::string& name, const glm::vec3& values)
@@ -128,48 +143,64 @@ namespace Pangolin {
 
 	void OpenGLShader::opengl_set_uniform_int(const std::string& name, int value)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::opengl_set_uniform_float(const std::string& name, float value)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform1f(location, value);
 	}
 	
 	void OpenGLShader::opengl_set_uniform_float2(const std::string& name, const glm::vec2& values)
 	{
+		PL_PROFILE_FUNCTION();
+		
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform2f(location, values.x, values.y);
 	}
 
 	void OpenGLShader::opengl_set_uniform_float3(const std::string& name, const glm::vec3& values)
 	{
+		PL_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform3f(location, values.x, values.y, values.z);
 	}
 
 	void OpenGLShader::opengl_set_uniform_float4(const std::string& name, const glm::vec4& values)
 	{
+		PL_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform4f(location, values.x, values.y, values.z, values.w);
 	}
 
 	void OpenGLShader::opengl_set_uniform_mat3(const std::string& name, const glm::mat3& matrix)
 	{
+		PL_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void OpenGLShader::opengl_set_uniform_mat4(const std::string& name, const glm::mat4& matrix)
 	{
+		PL_PROFILE_FUNCTION();
+
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	std::string OpenGLShader::read_file(const std::string& filepath)
 	{
+		PL_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		PL_CORE_ASSERT(in, "Could not open file '{0}'", filepath);
@@ -182,6 +213,8 @@ namespace Pangolin {
 	}
 
 	std::unordered_map<GLenum, ShaderComponents> OpenGLShader::load_from_path(const std::string& path) {
+		PL_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, ShaderComponents> shader_sources;
 
 		for (const auto& entry : std::filesystem::directory_iterator(path)) {
