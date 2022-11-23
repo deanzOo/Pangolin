@@ -13,10 +13,11 @@ namespace Pangolin {
 
 		inline virtual const BufferLayout& get_layout() const override { return m_layout; };
 		inline virtual void set_layout(const BufferLayout& layout) override { m_layout = layout; }
+		inline virtual void set_data(const void* data, uint32_t size) {};
 
 		virtual uint32_t get_count() const { return m_count; }
 	private:
-		uint32_t m_rendrer_id;
+		uint32_t _rendrer_id;
 		BufferLayout m_layout;
 		uint32_t m_count;
 	};

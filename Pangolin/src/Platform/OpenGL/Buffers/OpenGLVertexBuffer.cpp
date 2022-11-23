@@ -4,25 +4,36 @@
 #include "glad/glad.h"
 
 namespace Pangolin {
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	{
+		PL_PROFILE_FUNCTION();
+
+		glCreateBuffers(1, &_rendrer_id);
+		glBindBuffer(GL_ARRAY_BUFFER, _rendrer_id);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	{
 		PL_PROFILE_FUNCTION();
 		
-		glCreateBuffers(1, &m_rendrer_id);
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendrer_id);
+		glCreateBuffers(1, &_rendrer_id);
+		glBindBuffer(GL_ARRAY_BUFFER, _rendrer_id);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
+	
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		PL_PROFILE_FUNCTION();
 		
-		glDeleteBuffers(1, &m_rendrer_id);
+		glDeleteBuffers(1, &_rendrer_id);
 	}
+	
 	void OpenGLVertexBuffer::bind() const
 	{
 		PL_PROFILE_FUNCTION();
 		
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendrer_id);
+		glBindBuffer(GL_ARRAY_BUFFER, _rendrer_id);
 	}
 
 	void OpenGLVertexBuffer::unbind() const
@@ -30,5 +41,13 @@ namespace Pangolin {
 		PL_PROFILE_FUNCTION();
 		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void OpenGLVertexBuffer::set_data(const void* data, uint32_t size)
+	{
+		PL_PROFILE_FUNCTION();
+
+		glBindBuffer(GL_ARRAY_BUFFER, _rendrer_id);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 }

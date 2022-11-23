@@ -5,8 +5,7 @@
 namespace Pangolin {
 	class VertexBuffer : public Buffer {
 	public:
-		virtual void bind() const = 0;
-		virtual void unbind() const = 0;
+		static Ref<VertexBuffer> create(uint32_t size);
 		static Ref<VertexBuffer> create(float* vertices, uint32_t size);
 	};
 }
