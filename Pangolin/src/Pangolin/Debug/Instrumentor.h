@@ -122,7 +122,7 @@ namespace Pangolin {
 	};
 }
 
-#define PL_PROFILE 1
+#define PL_PROFILE 0
 #if PL_PROFILE
 #define PL_PROFILE_BEGIN_SESSION(name, filepath) ::Pangolin::Instrumentor::get().begin_session(name, filepath)
 #define PL_PROFILE_END_SESSION() ::Pangolin::Instrumentor::get().end_session()

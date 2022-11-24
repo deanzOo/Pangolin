@@ -37,7 +37,7 @@ void Sandbox2D::on_update(Pangolin::Timestep step)
 		Pangolin::Renderer2D::begin_scene(_camera_controller.get_camera());
 		Pangolin::Renderer2D::draw_quad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 		Pangolin::Renderer2D::draw_quad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, {0.8f, 0.2f, 0.3f, 1.0f});
-		//Pangolin::Renderer2D::draw_quad({ 0.0f, 0.5f, -0.1f }, { 5.0f, 5.0f }, _texture, 5.0f, { 0.8f, 0.3f, 0.2f, 1.0f });
+		Pangolin::Renderer2D::draw_quad({ -2.0f, -2.5f, -0.1f }, { 5.0f, 5.0f }, _texture, 1.0f, { 0.8f, 0.3f, 0.2f, 1.0f });
 
 		//Pangolin::Renderer2D::draw_rotated_quad({ 7.0f, 7.0f, -0.1f }, { 5.0f, 5.0f }, glm::radians(45.0f), _texture);
 		//Pangolin::Renderer2D::draw_rotated_quad({ -7.0f, -7.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), _square_color);

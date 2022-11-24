@@ -11,7 +11,9 @@ namespace Pangolin {
 	struct QuadVertex {
 		glm::vec3 position;
 		glm::vec4 color;
-		glm::vec2 texture;
+		glm::vec2 texture_coordinates;
+		float texture_index;
+		float tile_factor;
 	};
 
 	struct Renderer2DStorage {
@@ -21,16 +23,22 @@ namespace Pangolin {
 		const uint32_t MAX_QUADS = 10000;
 		const uint32_t MAX_VERTICES = MAX_QUADS * VERTICES_PER_QUAD;
 		const uint32_t MAX_INDICES = MAX_QUADS * INDICES_PER_QUAD;
+		static const uint32_t MAX_TEXTURE_SLOTS = 32;
+
+		const float WHITE_TEXTURE_INDEX = 0.0f;
 
 		Ref<VertexArray> quad_vertex_array;
 		Ref<VertexBuffer> quad_vertex_buffer;
 		Ref<Shader> texture_shader;
 		Ref<Texture2D> white_texture;
 
-		QuadVertex* quad_vertex_array_base = nullptr;
-		QuadVertex* quad_vertex_array_ptr = nullptr;
+		QuadVertex* quad_vertex_buffer_base = nullptr;
+		QuadVertex* quad_vertex_buffer_ptr = nullptr;
 
 		uint32_t quad_indices_count = 0;
+
+		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> texture_slots;
+		uint32_t texture_slot_index = 1; // 0 belongs to white texture
 	};
 
 	static Renderer2DStorage _storage;
@@ -46,11 +54,13 @@ namespace Pangolin {
 		_storage.quad_vertex_buffer->set_layout({
 			{ ShaderDataType::Float3, "i_position"},
 			{ ShaderDataType::Float4, "i_color"},
-			{ ShaderDataType::Float2, "i_texture_coordinate"}
+			{ ShaderDataType::Float2, "i_texture_coordinate"},
+			{ ShaderDataType::Float, "i_texture_index"},
+			{ ShaderDataType::Float, "i_tile_factor"}
 		});
 		_storage.quad_vertex_array->add_vertex_buffer(_storage.quad_vertex_buffer);
 
-		_storage.quad_vertex_array_base = new QuadVertex[_storage.MAX_VERTICES];
+		_storage.quad_vertex_buffer_base = new QuadVertex[_storage.MAX_VERTICES];
 
 		uint32_t* quad_indices = new uint32_t[_storage.MAX_INDICES];
 
@@ -64,7 +74,7 @@ namespace Pangolin {
 			quad_indices[i + 4] = offset + 3;
 			quad_indices[i + 5] = offset + 0;
 
-			offset += _storage.VERTICES_PER_QUAD;
+			offset += 4;
 		}
 
 		Ref<IndexBuffer> index_buffer = IndexBuffer::create(quad_indices, _storage.MAX_INDICES);
@@ -75,9 +85,15 @@ namespace Pangolin {
 		uint32_t white_texture_data = 0xffffffff;
 		_storage.white_texture->set_data(&white_texture_data, sizeof(uint32_t));
 
+		int32_t samplers[_storage.MAX_TEXTURE_SLOTS];
+		for (uint32_t i = 0; i < _storage.MAX_TEXTURE_SLOTS; i++)
+			samplers[i] = i;
+
 		_storage.texture_shader = Shader::create("assets/shaders/texture/");
 		_storage.texture_shader->bind();
-		_storage.texture_shader->set_uniform_int("u_texture", 0);
+		_storage.texture_shader->set_uniform_int_array("u_textures", samplers, _storage.MAX_TEXTURE_SLOTS);;
+
+		_storage.texture_slots[0] = _storage.white_texture;
 	}
 	
 	void Renderer2D::shutdown()
@@ -92,16 +108,17 @@ namespace Pangolin {
 		_storage.texture_shader->bind();
 		_storage.texture_shader->set_uniform_mat4("u_view_projection", camera.get_view_projection_matrix());
 
-		_storage.quad_vertex_array_ptr = _storage.quad_vertex_array_base;
+		_storage.quad_vertex_buffer_ptr = _storage.quad_vertex_buffer_base;
 		_storage.quad_indices_count = 0;
+		_storage.texture_slot_index = 1;
 	}
 	
 	void Renderer2D::end_scene()
 	{
 		PL_PROFILE_FUNCTION();
 
-		uint32_t data_size = (uint8_t*)_storage.quad_vertex_array_ptr - (uint8_t*)_storage.quad_vertex_array_base;
-		_storage.quad_vertex_buffer->set_data(_storage.quad_vertex_array_base, data_size);
+		uint32_t data_size = (uint8_t*)_storage.quad_vertex_buffer_ptr - (uint8_t*)_storage.quad_vertex_buffer_base;
+		_storage.quad_vertex_buffer->set_data(_storage.quad_vertex_buffer_base, data_size);
 
 		flush();
 	}
@@ -110,6 +127,9 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 
+		for (uint32_t i = 0; i < _storage.texture_slot_index; i++)
+			_storage.texture_slots[i]->bind(i);
+		
 		RenderCommand::draw_indexed(_storage.quad_vertex_array, _storage.quad_indices_count);
 	}
 
@@ -122,32 +142,40 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 
-		_storage.quad_vertex_array_ptr->position = position;
-		_storage.quad_vertex_array_ptr->color = color;
-		_storage.quad_vertex_array_ptr->texture = glm::vec2(0.0f);
-		_storage.quad_vertex_array_ptr++;
+		_storage.quad_vertex_buffer_ptr->position = position;
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = glm::vec2(0.0f);
+		_storage.quad_vertex_buffer_ptr->texture_index = _storage.WHITE_TEXTURE_INDEX;
+		_storage.quad_vertex_buffer_ptr->tile_factor = 1.0f;
+		_storage.quad_vertex_buffer_ptr++;
 
-		_storage.quad_vertex_array_ptr->position = { position.x + size.x, position.y, 0.0f };
-		_storage.quad_vertex_array_ptr->color = color;
-		_storage.quad_vertex_array_ptr->texture = { 1.0f, 0.0f };
-		_storage.quad_vertex_array_ptr++;
+		_storage.quad_vertex_buffer_ptr->position = { position.x + size.x, position.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = { 1.0f, 0.0f };
+		_storage.quad_vertex_buffer_ptr->texture_index = _storage.WHITE_TEXTURE_INDEX;
+		_storage.quad_vertex_buffer_ptr->tile_factor = 1.0f;
+		_storage.quad_vertex_buffer_ptr++;
 
-		_storage.quad_vertex_array_ptr->position = { position.x + size.x, position.y + size.y, 0.0f };
-		_storage.quad_vertex_array_ptr->color = color;
-		_storage.quad_vertex_array_ptr->texture = glm::vec2(1.0f);
-		_storage.quad_vertex_array_ptr++;
+		_storage.quad_vertex_buffer_ptr->position = { position.x + size.x, position.y + size.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = glm::vec2(1.0f);
+		_storage.quad_vertex_buffer_ptr->texture_index = _storage.WHITE_TEXTURE_INDEX;
+		_storage.quad_vertex_buffer_ptr->tile_factor = 1.0f;
+		_storage.quad_vertex_buffer_ptr++;
 
-		_storage.quad_vertex_array_ptr->position = { position.x, position.y + size.y, 0.0f };
-		_storage.quad_vertex_array_ptr->color = color;
-		_storage.quad_vertex_array_ptr->texture = { 0.0f, 1.0f };
-		_storage.quad_vertex_array_ptr++;
+		_storage.quad_vertex_buffer_ptr->position = { position.x, position.y + size.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = { 0.0f, 1.0f };
+		_storage.quad_vertex_buffer_ptr->texture_index = _storage.WHITE_TEXTURE_INDEX;
+		_storage.quad_vertex_buffer_ptr->tile_factor = 1.0f;
+		_storage.quad_vertex_buffer_ptr++;
 
-		_storage.quad_indices_count++;
+		_storage.quad_indices_count += _storage.INDICES_PER_QUAD;
 
-		_storage.texture_shader->set_uniform_float("u_tile_factor", 1.0f);
 		_storage.white_texture->bind();
 
-		/*glm::mat4 transform;
+#if OLD
+		glm::mat4 transform;
 		{
 			PL_PROFILE_SCOPE("Renderer2D::draw_quad-transform")
 			transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
@@ -155,7 +183,8 @@ namespace Pangolin {
 		_storage.texture_shader->set_uniform_mat4("u_transform", transform);
 
 		_storage.quad_vertex_array->bind();
-		RenderCommand::draw_indexed(_storage.quad_vertex_array);*/
+		RenderCommand::draw_indexed(_storage.quad_vertex_array);
+#endif
 	}
 
 	void Renderer2D::draw_quad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tile_factor, const glm::vec4& tint_color)
@@ -167,6 +196,58 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		float texture_index = 0.0f;
+
+		for (uint32_t i = 0; i < _storage.texture_slot_index; i++) {
+			if (_storage.texture_slots[i]->equals(*texture)) {
+				texture_index = (float)i;
+				break;
+			}
+		}
+
+		if (texture_index == 0.0f) {
+			texture_index = (float)_storage.texture_slot_index;
+			_storage.texture_slots[_storage.texture_slot_index] = texture;
+			_storage.texture_slot_index++;
+		}
+
+		_storage.quad_vertex_buffer_ptr->position = position;
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = glm::vec2(0.0f);
+		_storage.quad_vertex_buffer_ptr->texture_index = texture_index;
+		_storage.quad_vertex_buffer_ptr->tile_factor = tile_factor;
+		_storage.quad_vertex_buffer_ptr++;
+
+		_storage.quad_vertex_buffer_ptr->position = { position.x + size.x, position.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = { 1.0f, 0.0f };
+		_storage.quad_vertex_buffer_ptr->texture_index = texture_index;
+		_storage.quad_vertex_buffer_ptr->tile_factor = tile_factor;
+		_storage.quad_vertex_buffer_ptr++;
+
+		_storage.quad_vertex_buffer_ptr->position = { position.x + size.x, position.y + size.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = glm::vec2(1.0f);
+		_storage.quad_vertex_buffer_ptr->texture_index = texture_index;
+		_storage.quad_vertex_buffer_ptr->tile_factor = tile_factor;
+		_storage.quad_vertex_buffer_ptr++;
+
+		_storage.quad_vertex_buffer_ptr->position = { position.x, position.y + size.y, 0.0f };
+		_storage.quad_vertex_buffer_ptr->color = color;
+		_storage.quad_vertex_buffer_ptr->texture_coordinates = { 0.0f, 1.0f };
+		_storage.quad_vertex_buffer_ptr->texture_index = texture_index;
+		_storage.quad_vertex_buffer_ptr->tile_factor = tile_factor;
+		_storage.quad_vertex_buffer_ptr++;
+
+		_storage.quad_indices_count += _storage.INDICES_PER_QUAD;
+
+		_storage.white_texture->bind();
+
+
+
+#if OLD
 		_storage.texture_shader->set_uniform_float4("u_color", tint_color);
 		_storage.texture_shader->set_uniform_float("u_tile_factor", tile_factor);
 		texture->bind();
@@ -176,6 +257,7 @@ namespace Pangolin {
 
 		_storage.quad_vertex_array->bind();
 		RenderCommand::draw_indexed(_storage.quad_vertex_array);
+#endif
 	}
 	
 	void Renderer2D::draw_rotated_quad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)

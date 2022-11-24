@@ -16,6 +16,8 @@ namespace Pangolin {
 		void set_data(void* data, uint32_t size) override;
 
 		virtual void bind(uint32_t slot = 0) const override;
+
+		inline virtual bool equals(const Texture2D& other) const override { return _renderer_id == ((OpenGLTexture2D&)other)._renderer_id; }
 	private:
 		std::string _path;
 		uint32_t _width, _height;

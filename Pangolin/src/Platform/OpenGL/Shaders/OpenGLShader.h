@@ -22,13 +22,14 @@ namespace Pangolin {
 		inline virtual const std::string& get_name() const override { return _name; };
 
 		virtual void set_uniform_int(const std::string& name, int value) override;
+		virtual void set_uniform_int_array(const std::string& name, int* values, uint32_t count) override;
 		virtual void set_uniform_mat4(const std::string& name, const glm::mat4& matrix) override;
 		virtual void set_uniform_float(const std::string& name, float value) override;
 		virtual void set_uniform_float3(const std::string& name, const glm::vec3& values) override;
 		virtual void set_uniform_float4(const std::string& name, const glm::vec4& values) override;
 
 		void opengl_set_uniform_int(const std::string& name, int value);
-
+		void opengl_set_uniform_int_array(const std::string& name, int* values, uint32_t count);
 		void opengl_set_uniform_float(const std::string& name, float value);
 		void opengl_set_uniform_float2(const std::string& name, const glm::vec2& values);
 		void opengl_set_uniform_float3(const std::string& name, const glm::vec3& values);

@@ -121,6 +121,11 @@ namespace Pangolin {
 		opengl_set_uniform_int(name, value);
 	}
 
+	void OpenGLShader::set_uniform_int_array(const std::string& name, int* values, uint32_t count)
+	{
+		opengl_set_uniform_int_array(name, values, count);
+	}
+
 	void OpenGLShader::set_uniform_mat4(const std::string& name, const glm::mat4& matrix)
 	{
 		opengl_set_uniform_mat4(name, matrix);
@@ -147,6 +152,14 @@ namespace Pangolin {
 		
 		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::opengl_set_uniform_int_array(const std::string& name, int* values, uint32_t count)
+	{
+		PL_PROFILE_FUNCTION();
+
+		GLint location = glGetUniformLocation(_renderer_id, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::opengl_set_uniform_float(const std::string& name, float value)
