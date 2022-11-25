@@ -24,6 +24,8 @@ void Sandbox2D::on_update(Pangolin::Timestep step)
 	
 	_camera_controller.on_update(step);
 
+	Pangolin::Renderer2D::reset_statistics();
+
 	{
 		PL_PROFILE_SCOPE("Renderer Prep");
 
@@ -52,6 +54,14 @@ void Sandbox2D::on_imgui_render()
 	PL_PROFILE_FUNCTION();
 	
 	ImGui::Begin("Settings");
+
+	auto stats = Pangolin::Renderer2D::get_stats();
+
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.draw_calls);
+	ImGui::Text("Quads: %d", stats.quad_count);
+	ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
+	ImGui::Text("Indices: %d", stats.get_total_index_count());
 
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(_square_color));
 
