@@ -4,3 +4,4 @@ int/
 *.sln
 *.vcxproj
 *.vcxproj.*
+*.iml

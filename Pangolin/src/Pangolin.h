@@ -23,6 +23,7 @@
 
 #include "Pangolin/Renderer/Textures/Texture.h"
 #include "Pangolin/Renderer/Textures/Texture2D.h"
+#include "Pangolin/Renderer/Textures/SubTexture2D.h"
 
 #include "Pangolin/Renderer/Buffers/IndexBuffer.h"
 #include "Pangolin/Renderer/Buffers/VertexBuffer.h"
