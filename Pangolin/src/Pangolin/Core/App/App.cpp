@@ -62,6 +62,11 @@ namespace Pangolin {
 		layer->on_attach(); 
 	}
 
+	void App::close()
+	{
+		_running = false;
+	}
+
 	bool App::on_window_close(WindowCloseEvent& event) {
 		_running = false;
 		return true;

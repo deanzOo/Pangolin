@@ -12,6 +12,7 @@ namespace Pangolin {
 
 		inline virtual uint32_t get_width() const override { return _width; };
 		inline virtual uint32_t get_height() const override { return _height; };
+		inline virtual uint32_t get_renderer_id() const override { return _renderer_id; }
 
 		void set_data(void* data, uint32_t size) override;
 

@@ -28,6 +28,7 @@
 #include "Pangolin/Renderer/Buffers/IndexBuffer.h"
 #include "Pangolin/Renderer/Buffers/VertexBuffer.h"
 #include "Pangolin/Renderer/Buffers/BufferLayout.h"
+#include "Pangolin/Renderer/Buffers/FrameBuffer.h"
 
 #include "Pangolin/Renderer/Arrays/VertexArray.h"
 
