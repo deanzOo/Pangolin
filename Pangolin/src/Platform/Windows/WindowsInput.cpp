@@ -7,11 +7,11 @@
 #include "Pangolin/Core/App/App.h"
 
 namespace Pangolin {
-	bool Input::is_key_pressed(int keycode)
+	bool Input::is_key_pressed(KeyCode keycode)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(App::get().get_window().get_native_window());
 
-		int status = glfwGetKey(window, keycode);
+		int status = glfwGetKey(window, (int)keycode);
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
 	bool Input::is_mouse_button_pressed(int button)

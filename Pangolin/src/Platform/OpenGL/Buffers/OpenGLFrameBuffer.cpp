@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 
 namespace Pangolin {
+
+	static const uint32_t _MAX_FRAMEBUFFER_SIZE = 8192;
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferSpecification spec)
 		: _spec(spec)
 	{
@@ -55,11 +58,14 @@ namespace Pangolin {
 	void OpenGLFrameBuffer::unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
 	}
 
 	void OpenGLFrameBuffer::resize(uint32_t width, uint32_t height)
 	{
+		if (width <= 0 || height <= 0 || width > _MAX_FRAMEBUFFER_SIZE) {
+			PL_CORE_WARN("Invalid Framebuffer size: {0},{1}", width, height);
+			return;
+		}
 		_spec.width = width;
 		_spec.height = height;
 		invalidate();

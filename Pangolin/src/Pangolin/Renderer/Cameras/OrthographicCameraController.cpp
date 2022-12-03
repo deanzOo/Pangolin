@@ -4,6 +4,7 @@
 #include "Pangolin/Core/Input/KeyCodes.h"
 
 namespace Pangolin {
+	static KeyCode keycode;
 	OrthographicCameraController::OrthographicCameraController(float aspect_ratio, bool rotation)
 		: _camera(-_aspect_ratio * _zoom, _aspect_ratio * _zoom, -_zoom, _zoom), _aspect_ratio(aspect_ratio), _rotation(rotation)
 	{
@@ -13,13 +14,13 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 		
-		if (Input::is_key_pressed(PL_KEY_W)) _camera_position.y += _camera_translation_spd * step;
-		else if (Input::is_key_pressed(PL_KEY_A)) _camera_position.x -= _camera_translation_spd * step;
-		else if (Input::is_key_pressed(PL_KEY_S)) _camera_position.y -= _camera_translation_spd * step;
-		else if (Input::is_key_pressed(PL_KEY_D)) _camera_position.x += _camera_translation_spd * step;
+		if (Input::is_key_pressed(Keys::W)) _camera_position.y += _camera_translation_spd * step;
+		else if (Input::is_key_pressed(Keys::A)) _camera_position.x -= _camera_translation_spd * step;
+		else if (Input::is_key_pressed(Keys::S)) _camera_position.y -= _camera_translation_spd * step;
+		else if (Input::is_key_pressed(Keys::D)) _camera_position.x += _camera_translation_spd * step;
 		if (_rotation) {
-			if (Input::is_key_pressed(PL_KEY_E)) _camera_rotation += _camera_rotation_spd * step;
-			else if (Input::is_key_pressed(PL_KEY_Q)) _camera_rotation -= _camera_rotation_spd * step;
+			if (Input::is_key_pressed(Keys::E)) _camera_rotation += _camera_rotation_spd * step;
+			else if (Input::is_key_pressed(Keys::Q)) _camera_rotation -= _camera_rotation_spd * step;
 			_camera.set_rotation(_camera_rotation);
 		}
 

@@ -52,7 +52,7 @@
 #endif
 
 #ifdef PL_ENABLE_ASSERTS
-	#define PL_CORE_ASSERT(x, ...) { if (!(x)) { PL_CORE_ERROR("Assertion Failed!\n\t{0}"); PL_CORE_ERROR(__VA_ARGS__); __debugbreak(); } }
+	#define PL_CORE_ASSERT(x, ...) { if (!(x)) { PL_CORE_ERROR("Assertion Failed!\n\t{0}", __VA_ARGS__); __debugbreak(); } }
 	#define PL_CLIENT_ASSERT(x, ...) { if (!(x)) { PL_CORE_ERROR("Assertion Failed\n\t{0}", __VA_ARGS__); __debugbreak(); } }
 #else
 	#define PL_CORE_ASSERT(x, ...)  {}

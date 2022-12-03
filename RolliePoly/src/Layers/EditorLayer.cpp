@@ -148,7 +148,7 @@ namespace Pangolin {
             App::get().get_imgui_layer()->set_block_events(!_viewport_focused || !_viewport_hovered);
 
             ImVec2 viewport_size = ImGui::GetContentRegionAvail();
-            if (_viewport_size != *((glm::vec2*)&viewport_size)) {
+            if ((_viewport_size != *((glm::vec2*)&viewport_size) && viewport_size.x > 0 && viewport_size.y > 0)) {
                 _frame_buffer->resize((uint32_t)viewport_size.x, (uint32_t)viewport_size.y);
                 _viewport_size = { viewport_size.x, viewport_size.y };
 
@@ -156,7 +156,7 @@ namespace Pangolin {
             }
             uint32_t texture_id = _frame_buffer->get_color_attachment_renderer_id();
 
-            ImGui::Image((void*)texture_id, viewport_size , ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+            ImGui::Image((void*)(uintptr_t)texture_id, viewport_size , ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
             ImGui::End();
             ImGui::PopStyleVar();
         }

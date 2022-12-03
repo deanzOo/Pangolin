@@ -110,8 +110,8 @@ namespace Pangolin {
 			long long start = std::chrono::time_point_cast<std::chrono::microseconds>(_start_timepoint).time_since_epoch().count();
 			long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
 
-			uint32_t thread_id = std::hash<std::thread::id>{}(std::this_thread::get_id());
-			Instrumentor::get().write_profile({ _name, start, end, thread_id });
+			auto thread_id = std::hash<std::thread::id>{}(std::this_thread::get_id());
+			Instrumentor::get().write_profile({ _name, start, end, (uint32_t)thread_id });
 
 			_stopped = true;
 		}

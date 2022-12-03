@@ -123,8 +123,8 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 
-		uint32_t data_size = (uint8_t*)_storage.quad_vertex_buffer_ptr - (uint8_t*)_storage.quad_vertex_buffer_base;
-		_storage.quad_vertex_buffer->set_data(_storage.quad_vertex_buffer_base, data_size);
+		auto data_size = (uint8_t*)_storage.quad_vertex_buffer_ptr - (uint8_t*)_storage.quad_vertex_buffer_base;
+		_storage.quad_vertex_buffer->set_data(_storage.quad_vertex_buffer_base, (uint32_t)data_size);
 
 		flush();
 	}
