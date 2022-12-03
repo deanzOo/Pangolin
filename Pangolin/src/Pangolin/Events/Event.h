@@ -30,6 +30,8 @@ namespace Pangolin {
 	class Event {
 		friend class EventDispatcher;
 	public:
+		virtual ~Event() = default;
+
 		virtual EventType get_event_type() const = 0;
 		virtual const char* get_event_name() const = 0;
 		virtual int get_category_flags() const = 0;
@@ -40,7 +42,6 @@ namespace Pangolin {
 		}
 
 		inline bool is_handled() { return handled; }
-	protected:
 		bool handled = false;
 	};
 

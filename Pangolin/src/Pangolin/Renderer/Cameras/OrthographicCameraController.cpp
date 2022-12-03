@@ -36,6 +36,14 @@ namespace Pangolin {
 		dispatcher.dispatch<WindowResizeEvent>(PL_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
 	}
 
+	void OrthographicCameraController::on_resize(float width, float height)
+	{
+		PL_PROFILE_FUNCTION();
+
+		_aspect_ratio = width / height;
+		_camera.set_projection(-_aspect_ratio * _zoom, _aspect_ratio * _zoom, -_zoom, _zoom);
+	}
+
 	bool OrthographicCameraController::on_mouse_scrolled(MouseScrolledEvent& event)
 	{
 		PL_PROFILE_FUNCTION();
@@ -51,8 +59,7 @@ namespace Pangolin {
 	{
 		PL_PROFILE_FUNCTION();
 		
-		_aspect_ratio = (float)event.get_window_width() / (float)event.get_window_height();
-		_camera.set_projection(-_aspect_ratio * _zoom, _aspect_ratio * _zoom, -_zoom, _zoom);
+		on_resize((float)event.get_window_width(), (float)event.get_window_height());
 
 		return false;
 	}

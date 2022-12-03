@@ -13,6 +13,8 @@ namespace Pangolin {
 
 		void on_update(Timestep step);
 		void on_event(Event& event);
+
+		void on_resize(float width, float height);
 		
 		inline OrthographicCamera& get_camera() { return _camera; };
 		inline const OrthographicCamera& get_camera() const { return _camera; };

@@ -1,29 +1,27 @@
 #include "plpch.h"
 
-#include "WindowsInput.h"
+#include "Pangolin/Core/Input/Input.h"
 
 #include "GLFW/glfw3.h"
 
 #include "Pangolin/Core/App/App.h"
 
 namespace Pangolin {
-	Input* Input::instance = new WindowsInput();
-
-	bool WindowsInput::is_key_pressed_impl(int keycode)
+	bool Input::is_key_pressed(int keycode)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(App::get().get_window().get_native_window());
 
 		int status = glfwGetKey(window, keycode);
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
-	bool WindowsInput::is_mouse_button_pressed_impl(int button)
+	bool Input::is_mouse_button_pressed(int button)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(App::get().get_window().get_native_window());
 
 		int status = glfwGetMouseButton(window, button);
 		return status == GLFW_PRESS;
 	}
-	std::pair<float, float> WindowsInput::get_mouse_position_impl()
+	std::pair<float, float> Input::get_mouse_position()
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(App::get().get_window().get_native_window());
 		double x, y;
@@ -31,12 +29,12 @@ namespace Pangolin {
 
 		return std::pair<float, float>((float)x, (float)y);
 	}
-	float WindowsInput::get_mouse_x_impl()
+	float Input::get_mouse_x()
 	{
-		return get_mouse_position_impl().first;
+		return get_mouse_position().first;
 	}
-	float WindowsInput::get_mouse_y_impl()
+	float Input::get_mouse_y()
 	{
-		return get_mouse_position_impl().second;
+		return get_mouse_position().second;
 	}
 }

@@ -13,10 +13,17 @@ namespace Pangolin {
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		glDeleteFramebuffers(1, &_renderer_id);
+		glDeleteTextures(1, &_color_attachment);
+		glDeleteTextures(1, &_depth_attachment);
 	}
 
 	void OpenGLFrameBuffer::invalidate()
 	{
+		if (_renderer_id) {
+			glDeleteFramebuffers(1, &_renderer_id);
+			glDeleteTextures(1, &_color_attachment);
+			glDeleteTextures(1, &_depth_attachment);
+		}
 		glCreateFramebuffers(1, &_renderer_id);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, _renderer_id);
@@ -32,7 +39,6 @@ namespace Pangolin {
 		glCreateTextures(GL_TEXTURE_2D, 1, &_depth_attachment);
 		glBindTexture(GL_TEXTURE_2D, _depth_attachment);
 		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, _spec.width, _spec.height);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, _spec.width, _spec.height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, _depth_attachment, 0);
 
 		PL_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete");
@@ -43,10 +49,19 @@ namespace Pangolin {
 	void OpenGLFrameBuffer::bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, _renderer_id);
+		glViewport(0, 0, _spec.width, _spec.height);
 	}
 
 	void OpenGLFrameBuffer::unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	}
+
+	void OpenGLFrameBuffer::resize(uint32_t width, uint32_t height)
+	{
+		_spec.width = width;
+		_spec.height = height;
+		invalidate();
 	}
 }

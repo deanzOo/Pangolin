@@ -15,7 +15,7 @@ namespace Pangolin {
 	class App
 	{
 	public:
-		App();
+		App(const std::string& title = "Pangolin");
 		~App();
 		void run();
 
@@ -29,6 +29,7 @@ namespace Pangolin {
 		inline static App& get() { return *instance; }
 		inline Window& get_window() { return *_window; }
 
+		inline ImGuiLayer* get_imgui_layer() { return _imgui_layer; }
 	private:
 		bool on_window_close(WindowCloseEvent& e);
 		bool on_window_resize(WindowResizeEvent& e);

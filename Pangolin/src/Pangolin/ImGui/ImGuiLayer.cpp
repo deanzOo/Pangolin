@@ -51,6 +51,16 @@ namespace Pangolin {
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 	}
+    
+    void ImGuiLayer::on_event(Event& event)
+    {
+        if (_blocking_events) {
+            ImGuiIO& io = ImGui::GetIO();
+            event.handled |= event.is_in_category(EventCategoryMouse) & io.WantCaptureMouse;
+            event.handled |= event.is_in_category(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        }
+    }
+    
     void ImGuiLayer::begin()
     {
         PL_PROFILE_FUNCTION();
@@ -59,6 +69,7 @@ namespace Pangolin {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
+    
     void ImGuiLayer::end()
     {
         PL_PROFILE_FUNCTION();

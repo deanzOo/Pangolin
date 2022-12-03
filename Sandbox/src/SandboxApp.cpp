@@ -13,6 +13,8 @@ public:
 		//push_layer(new TextureLayer());
 		push_layer(new Sandbox2D());
 	}
+
+	~Sandbox() {}
 };
 
 Pangolin::App* Pangolin::create_app() {

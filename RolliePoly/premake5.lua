@@ -1,5 +1,5 @@
 -- premake5.lua
-project "Sandbox"
+project "RolliePoly"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"

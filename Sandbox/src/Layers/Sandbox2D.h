@@ -20,7 +20,6 @@ private:
 	Pangolin::Ref<Pangolin::SubTexture2D> _stairs_sprite;
 	Pangolin::Ref<Pangolin::SubTexture2D> _barrel_sprite;
 	Pangolin::Ref<Pangolin::SubTexture2D> _tree_sprite;
-	Pangolin::Ref<Pangolin::FrameBuffer> _frame_buffer;
 
 	glm::vec4 _square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 

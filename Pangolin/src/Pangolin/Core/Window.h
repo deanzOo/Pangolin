@@ -8,10 +8,10 @@
 namespace Pangolin {
 	struct WindowProps {
 		std::string _title;
-		unsigned int _width;
-		unsigned int _height;
+		uint32_t _width;
+		uint32_t _height;
 
-		WindowProps(const std::string& title = "Pangolin", unsigned int width = 1280, unsigned int height = 720) : _title(title), _width(width), _height(height) {}
+		WindowProps(const std::string& title = "Pangolin", uint32_t width = 1280, uint32_t height = 720) : _title(title), _width(width), _height(height) {}
 	};
 
 	class Window {

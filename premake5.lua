@@ -1,11 +1,15 @@
 -- premake5.lua
 workspace "Pangolin"
     architecture "x64"
-    startproject "Sandbox"
+    startproject "RolliePoly"
 
     configurations {
         "Debug",
         "Release"
+    }
+
+    flags {
+        "MultiProcessorCompile"
     }
 
     platforms { "Windows" }
@@ -23,8 +27,12 @@ include_dirs["ImGui"]   = "%{wks.location}/Pangolin/lib/ImGui"
 include_dirs["glm"]     = "%{wks.location}/Pangolin/lib/glm"
 include_dirs["stb"]     = "%{wks.location}/Pangolin/lib/stb"
 
+group "Dependencies"
+    include "Pangolin/lib/GLFW"
+    include "Pangolin/lib/Glad"
+    include "Pangolin/lib/ImGui"
+group ""
+
 include "Pangolin"
+include "RolliePoly"
 include "Sandbox"
-include "Pangolin/lib/GLFW"
-include "Pangolin/lib/Glad"
-include "Pangolin/lib/ImGui"

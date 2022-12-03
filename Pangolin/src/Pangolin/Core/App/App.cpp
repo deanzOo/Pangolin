@@ -6,14 +6,14 @@ namespace Pangolin {
 
 	App* App::instance = nullptr;
 
-	App::App()
+	App::App(const std::string& title)
 	{
 		PL_PROFILE_FUNCTION();
 		
 		PL_CORE_ASSERT(!instance, "App already exists!");
 		instance = this;
 
-		_window = Scope<Window>(Window::create());
+		_window = Scope<Window>(Window::create(WindowProps(title)));
 		_window->set_event_callback(PL_BIND_EVENT_FN(App::on_event));
 
 		_time = Scope<Time>(Time::create());
@@ -40,9 +40,9 @@ namespace Pangolin {
 		dispatcher.dispatch<WindowResizeEvent>(PL_BIND_EVENT_FN(App::on_window_resize));
 
 		for (auto it = _layer_stack.end(); it != _layer_stack.begin(); ) {
-			(*--it)->on_event(e);
 			if (e.is_handled())
 				break;
+			(*--it)->on_event(e);
 		}
 	}
 
